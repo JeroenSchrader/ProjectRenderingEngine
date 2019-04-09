@@ -7,8 +7,15 @@
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
+#include "Shader.h"
 
 int main() {	
+	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL, use Core profile
+
 	GLFWwindow* window;
 
 	/* Initialize the library */
@@ -52,11 +59,16 @@ int main() {
 	VertexArray vao;
 	vao.AddBuffer(vb, layout);
 
+	Shader shader("src/Shaders/BasicShader.shader");
+	shader.Bind();
+	shader.SetUniform4f("u_Color", 0.9, 0.2, 0.2, 1.0);
+
+	//For Frame/FpsTimer
 	double lastTime = glfwGetTime();
 	int nbFrames = 0;
 	
-	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window))
+	/* Loop until the user closes the window or presses the Escape key */
+	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window))
 	{
 		#pragma region Frame/FpsTimer
 		// Measure speed
@@ -77,6 +89,9 @@ int main() {
 		glClearColor(0.3f, 0.4f, 0.8f, 1.0f);
 		
 		ib.Bind();
+		shader.Bind();
+		shader.SetUniform4f("u_Color", 0.9, 0.2, 0.2, 1.0);
+
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, nullptr);
 
 		/* Swap front and back buffers */
