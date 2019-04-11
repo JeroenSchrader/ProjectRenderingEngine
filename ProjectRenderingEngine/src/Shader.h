@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "GLM/mat4x4.hpp"
 
 class Shader {
 private:
@@ -22,5 +23,7 @@ public:
 	void Unbind() const;
 
 	int GetUniformLocation(const std::string& name);
+	void SetUniform3f(const std::string& name, float f1, float f2, float f3);
 	void SetUniform4f(const std::string& name, float f1, float f2, float f3, float f4);
+	void SetUniformMatrix4f(const std::string& name, glm::mat4& matrix);
 };

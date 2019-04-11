@@ -6,6 +6,7 @@ private:
 	unsigned int m_Count;
 
 public:
+	IndexBuffer();
 	IndexBuffer(const unsigned int* indices, unsigned int count);
 	~IndexBuffer();
 

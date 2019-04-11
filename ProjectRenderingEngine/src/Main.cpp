@@ -1,106 +1,135 @@
 #include <iostream>
 
 #include "Renderer.h"
-#include <GLFW/glfw3.h>
+#include "DisplayManager.h"
+#include "InputManager.h"
+#include "Camera.h"
 
-#include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
+#include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
 
+#include "GLM/vec3.hpp"
+#include "GLM/gtx/transform.hpp"
+#include "GLM/gtc/matrix_transform.hpp"
+#include "GLM/gtx/transform.hpp"
+
 int main() {	
-	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL, use Core profile
+	DisplayManager displayManager(1280, 720, "Rendering Engine by Jeroen Schrader");
+	InputManager inputManager(displayManager.GetWindow());
+	Renderer renderer;
+	Camera camera(&inputManager, 0.1f, 0.7f, 90.0f, 0.01f, 1000.0f);
 
-	GLFWwindow* window;
-
-	/* Initialize the library */
-	if (!glfwInit())
-		return -1;
-
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(1280, 720, "Rendering Engine by Jeroen Schrader", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		return -1;
-	}
-
-	/* Make the window's context current */
-	glfwMakeContextCurrent(window);
-
-	if (glewInit() != GLEW_OK) {
-		std::cout << "Glew init error" << std::endl;
-	};
-
-	//Rectangle vertices
+	//3D Rectangle vertices
 	float vertices[]{
-		-0.8f, -0.8f, 0.0f,	//lower left
-		-0.8f,  0.8f, 0.0f, //upper left
-		 0.8f,  0.8f, 0.0f,	//upper right
-		 0.8f, -0.8f, 0.0f	//lower right
+		//Positions				//Colors
+		-0.8f, -0.8f, 0.8f,		0.0f, 1.0f, 0.0f,	//front lower left	- index 0
+		-0.8f,  0.8f, 0.8f,		1.0f, 0.0f, 0.0f,	//front upper left	- index 1
+		 0.8f,  0.8f, 0.8f,		0.0f, 0.0f, 1.0f,	//front upper right	- index 2
+		 0.8f, -0.8f, 0.8f,		1.0f, 1.0f, 1.0f,	//front lower right	- index 3
+
+		-0.8f, -0.8f, -0.8f,	0.0f, 0.0f, 0.0f,	//back lower left	- index 4
+		-0.8f,  0.8f, -0.8f,	1.0f, 0.0f, 1.0f,	//back upper left	- index 5
+		 0.8f,  0.8f, -0.8f,	0.0f, 1.0f, 1.0f,	//back upper right	- index 6
+		 0.8f, -0.8f, -0.8f,	1.0f, 1.0f, 0.0f	//back lower right	- index 7
 	};
 
 	unsigned int indices[]{
+		//front plane
 		0, 1, 2,
-		2, 3, 0
+		2, 3, 0,
+
+		//back plane
+		4, 5, 6,
+		6, 7, 4,
+
+		////top plane
+		1, 5, 6,
+		6, 2, 1,
+
+		////bottom plane
+		0, 4, 7,
+		7, 3, 0,
+
+		////right plane
+		3, 2, 6,
+		6, 7, 3,
+
+		////left plane
+		4, 5, 1,
+		1, 0, 4
 	};
 
-	VertexBuffer vb(vertices, 4 * 3 * sizeof(float));
+	VertexBuffer vb(vertices, sizeof(vertices));
 	VertexBufferLayout layout;
-	layout.Push<float>(3);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+	layout.Push<float>(3); //Positions, location 0
+	layout.Push<float>(3); //Colors,	location 1
 
 	VertexArray vao;
 	vao.AddBuffer(vb, layout);
 
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
 	Shader shader("src/Shaders/BasicShader.shader");
 	shader.Bind();
-	shader.SetUniform4f("u_Color", 0.9, 0.2, 0.2, 1.0);
-
-	//For Frame/FpsTimer
-	double lastTime = glfwGetTime();
-	int nbFrames = 0;
 	
 	/* Loop until the user closes the window or presses the Escape key */
-	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && !glfwWindowShouldClose(window))
+	while (!inputManager.KeyPressed(GLFW_KEY_ESCAPE) && !displayManager.ShouldWindowClose())
 	{
-		#pragma region Frame/FpsTimer
-		// Measure speed
-		double currentTime = glfwGetTime();
-		nbFrames++;
-		if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1 sec ago
-			// set new window title and reset timer
-			char buffer[75];
-			sprintf_s(buffer, "%.3f ms/frame | %.2f fps | Rendering Engine by Jeroen Schrader", 1000.0 / double(nbFrames), double(nbFrames));
-			nbFrames = 0;
-			lastTime += 1.0;
-			glfwSetWindowTitle(window, buffer);
+		inputManager.HandleInput();
+
+		camera.Update();
+
+		displayManager.Prepare();
+
+		glm::mat4 viewMatrix = camera.GetViewMatrix();
+		glm::mat4 projectionMatrix = camera.GetProjectionMatrix();
+
+		{	
+			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+			glm::mat4 scaleMatrix = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f));
+			glm::mat4 rotationX = glm::rotate(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::mat4 rotationY = glm::rotate(0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 rotationZ = glm::rotate(0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 rotationMatrix = rotationX * rotationY * rotationZ;
+			glm::mat4 transformationMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+
+			shader.Bind();
+			//shader.SetUniform4f("u_Color", transparency, 0.0, -transparency, 0.0);
+			shader.SetUniformMatrix4f("u_transformationMatrix", transformationMatrix);
+			shader.SetUniformMatrix4f("u_viewMatrix", viewMatrix);
+			shader.SetUniformMatrix4f("u_projectionMatrix", projectionMatrix);
+
+			ib.Bind();
+			renderer.Draw(ib.GetCount());
 		}
-		#pragma endregion
-			   
-		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(0.3f, 0.4f, 0.8f, 1.0f);
-		
-		ib.Bind();
-		shader.Bind();
-		shader.SetUniform4f("u_Color", 0.9, 0.2, 0.2, 1.0);
 
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(unsigned int), GL_UNSIGNED_INT, nullptr);
+		{
+			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 0.0f));
+			glm::mat4 scaleMatrix = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f));
+			glm::mat4 rotationX = glm::rotate(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::mat4 rotationY = glm::rotate(0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 rotationZ = glm::rotate(0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 rotationMatrix = rotationX * rotationY * rotationZ;
+			glm::mat4 transformationMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+			shader.Bind();
+			//shader.SetUniform4f("u_Color", transparency, 0.0, -transparency, 0.0);
+			shader.SetUniformMatrix4f("u_transformationMatrix", transformationMatrix);
+			shader.SetUniformMatrix4f("u_viewMatrix", viewMatrix);
+			shader.SetUniformMatrix4f("u_projectionMatrix", projectionMatrix);
 
-		/* Poll for and process events */
-		glfwPollEvents();
+			ib.Bind();
+			renderer.Draw(ib.GetCount());
+		}
+
+		displayManager.UpdateDisplay();
 	}
 
-	glfwTerminate();
+	displayManager.~DisplayManager();
+	inputManager.~InputManager();
+
 	return 0;
 }

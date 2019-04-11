@@ -14,4 +14,6 @@ public:
 	void Bind() const;
 	void Unbind() const;
 	void AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout);
+
+	inline unsigned int GetId() const { return m_Id; }
 };
