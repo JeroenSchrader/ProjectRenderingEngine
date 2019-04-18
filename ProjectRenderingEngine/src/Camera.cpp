@@ -19,8 +19,6 @@ Camera::~Camera()
 
 const glm::mat4 Camera::GetOrientation()
 {
-	//Rotate identity matrix by horizontal angle and vertical angle
-	//Then translate it by the inverse of the camera position
 	glm::mat4 orientation = glm::rotate(glm::mat4(1.0f), glm::radians(m_HorizontalAngleInDegrees), glm::vec3(1, 0, 0));
 	orientation = glm::rotate(orientation, glm::radians(m_VerticalAngleInDegrees), glm::vec3(0, 1, 0));
 	return orientation;

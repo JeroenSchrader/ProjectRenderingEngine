@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\DisplayManager.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -151,8 +152,10 @@
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\DisplayManager.h" />
+    <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\InputManager.h" />
+    <ClInclude Include="src\RawModel.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\VertexArray.h" />

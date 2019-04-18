@@ -11,10 +11,10 @@ private:
 	glm::mat4 m_ProjectionMatrix;
 	float m_Pitch = 0.0f;
 	float m_Yaw = 0.0f;
-	float m_MoveSpeed;
-	float m_TurnSpeed;
-	float m_HorizontalAngleInDegrees;
-	float m_VerticalAngleInDegrees;
+	float m_MoveSpeed = 0.1f;
+	float m_TurnSpeed = 0.7f;
+	float m_HorizontalAngleInDegrees = 0.0f;
+	float m_VerticalAngleInDegrees = 0.0f;
 
 	const glm::mat4 GetOrientation();
 

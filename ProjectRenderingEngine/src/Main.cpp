@@ -11,10 +11,8 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 
-#include "GLM/vec3.hpp"
-#include "GLM/gtx/transform.hpp"
-#include "GLM/gtc/matrix_transform.hpp"
-#include "GLM/gtx/transform.hpp"
+#include "RawModel.h"
+#include "Entity.h"
 
 int main() {	
 	DisplayManager displayManager(1280, 720, "Rendering Engine by Jeroen Schrader");
@@ -67,10 +65,14 @@ int main() {
 	layout.Push<float>(3); //Positions, location 0
 	layout.Push<float>(3); //Colors,	location 1
 
-	VertexArray vao;
+	VertexArray vao;	
 	vao.AddBuffer(vb, layout);
 
 	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	RawModel model(vao.GetId(), ib.GetCount());
+	Entity entity(model, glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(1,1,1));
+	Entity entity2(model, glm::vec3(2, 0, 0), glm::vec3(4, 0, 0), glm::vec3(1, 1, 1));
 
 	Shader shader("src/Shaders/BasicShader.shader");
 	shader.Bind();
@@ -88,41 +90,25 @@ int main() {
 		glm::mat4 projectionMatrix = camera.GetProjectionMatrix();
 
 		{	
-			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-			glm::mat4 scaleMatrix = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f));
-			glm::mat4 rotationX = glm::rotate(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 rotationY = glm::rotate(0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 rotationZ = glm::rotate(0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-			glm::mat4 rotationMatrix = rotationX * rotationY * rotationZ;
-			glm::mat4 transformationMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+			glm::mat4 transformationMatrix = entity.GetTransformationMatrix();
 
 			shader.Bind();
-			//shader.SetUniform4f("u_Color", transparency, 0.0, -transparency, 0.0);
 			shader.SetUniformMatrix4f("u_transformationMatrix", transformationMatrix);
 			shader.SetUniformMatrix4f("u_viewMatrix", viewMatrix);
 			shader.SetUniformMatrix4f("u_projectionMatrix", projectionMatrix);
 
-			ib.Bind();
-			renderer.Draw(ib.GetCount());
+			renderer.Draw(entity.GetModel().GetVertexIndexCount());
 		}
 
 		{
-			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 0.0f));
-			glm::mat4 scaleMatrix = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f));
-			glm::mat4 rotationX = glm::rotate(0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-			glm::mat4 rotationY = glm::rotate(0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 rotationZ = glm::rotate(0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-			glm::mat4 rotationMatrix = rotationX * rotationY * rotationZ;
-			glm::mat4 transformationMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+			glm::mat4 transformationMatrix = entity2.GetTransformationMatrix();
 
 			shader.Bind();
-			//shader.SetUniform4f("u_Color", transparency, 0.0, -transparency, 0.0);
 			shader.SetUniformMatrix4f("u_transformationMatrix", transformationMatrix);
 			shader.SetUniformMatrix4f("u_viewMatrix", viewMatrix);
 			shader.SetUniformMatrix4f("u_projectionMatrix", projectionMatrix);
 
-			ib.Bind();
-			renderer.Draw(ib.GetCount());
+			renderer.Draw(entity2.GetModel().GetVertexIndexCount());
 		}
 
 		displayManager.UpdateDisplay();
