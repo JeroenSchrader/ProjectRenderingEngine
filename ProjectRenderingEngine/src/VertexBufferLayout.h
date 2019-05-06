@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Renderer.h"
+#include <algorithm>
 
 struct VertexBufferElement {
 	unsigned int type;
@@ -34,19 +35,19 @@ public:
 
 	template<>
 	void Push<float>(unsigned int count) {
-		m_Elements.push_back({ GL_FLOAT, count, false });
+		m_Elements.push_back({GL_FLOAT, count, false });
 		m_Stride += count * VertexBufferElement::GetSizeOfType(GL_FLOAT);
 	}
 
 	template<>
 	void Push<unsigned int>(unsigned int count) {
-		m_Elements.push_back({ GL_UNSIGNED_INT, count, false });
+		m_Elements.push_back({GL_UNSIGNED_INT, count, false });
 		m_Stride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT);
 	}
 
 	template<>
 	void Push<unsigned char>(unsigned int count) {
-		m_Elements.push_back({ GL_UNSIGNED_BYTE, count, false });
+		m_Elements.push_back({GL_UNSIGNED_BYTE, count, false });
 		m_Stride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE);
 	}
 

@@ -9,4 +9,6 @@ public:
 	~VertexBuffer();
 	void Bind() const;
 	void Unbind() const;
+
+	inline const unsigned int GetId() const { return m_Id; }
 };

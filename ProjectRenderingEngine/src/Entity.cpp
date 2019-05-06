@@ -3,14 +3,14 @@
 #include "GLM/gtx/transform.hpp"
 #include "GLM/gtc/matrix_transform.hpp"
 
-Entity::Entity(RawModel model, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
-	: m_Model(model), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
+Entity::Entity(Mesh* mesh, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
+	: m_Mesh(mesh), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
 {
 }
 
 Entity::~Entity()
 {
-	m_Model.~RawModel();
+	(*m_Mesh).~Mesh();
 }
 
 glm::mat4 Entity::GetTransformationMatrix()
