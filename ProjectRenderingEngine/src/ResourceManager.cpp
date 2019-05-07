@@ -1,10 +1,15 @@
 #include "ResourceManager.h"
-#include "OpenGLMesh.h"
+
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
+
 #include "Entity.h"
+#include "OpenGLMesh.h"
+
+#include "Shader.h"
+#include "Material.h"
 
 //Basic 3D Cube vertices
 std::vector<float> vertices{
@@ -47,14 +52,6 @@ std::vector<unsigned int> indices{
 	1, 0, 4
 };
 
-ResourceManager::ResourceManager()
-{
-}
-
-ResourceManager::~ResourceManager()
-{
-}
-
 Mesh* ResourceManager::LoadBasicCubeMesh(std::string name)
 {
 	OpenGLMesh* mesh = new OpenGLMesh;
@@ -73,10 +70,21 @@ Mesh* ResourceManager::LoadBasicCubeMesh(std::string name)
 	return mesh;
 }
 
-const void ResourceManager::LoadBasicCube(std::string name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+Material* ResourceManager::LoadMaterial(std::string name, const std::string& shaderPath)
+{
+	Material* material = new Material(shaderPath);
+	m_Materials[name] = material;
+
+	return material;
+}
+
+const void ResourceManager::LoadBasicCube(std::string name, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
 	Mesh* mesh = LoadBasicCubeMesh(name);
+	Material* material = LoadMaterial(name, shaderPath);
 
-	Entity* entity = new Entity(mesh, position, rotation, scale);
+	Entity* entity = new Entity(mesh, material, position, rotation, scale);
 	m_Entities[name] = entity;
 }
+
+

@@ -51,6 +51,9 @@
     <ClCompile Include="src\OpenGLMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DisplayManager.h">
@@ -92,8 +95,12 @@
     <ClInclude Include="src\OpenGLMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\BasicShader.shader" />
+    <None Include="src\Shaders\TestShader.shader" />
   </ItemGroup>
 </Project>

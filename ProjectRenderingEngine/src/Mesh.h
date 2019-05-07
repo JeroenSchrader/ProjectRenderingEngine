@@ -12,7 +12,7 @@ private:
 	std::vector<float> m_Vertices;
 
 public:
-	Mesh() : m_Vertices(), m_Positions(), m_Uvs(), m_Normals(), m_Indices() {}
+	Mesh() = default;
 	virtual ~Mesh() = default;
 
 	inline std::vector<glm::vec3>& GetPositions(){ return m_Positions; }

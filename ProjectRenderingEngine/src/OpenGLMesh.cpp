@@ -50,10 +50,6 @@ void glCheckError(std::string functionName)
 	}
 }
 
-OpenGLMesh::OpenGLMesh()
-{
-}
-
 OpenGLMesh::~OpenGLMesh()
 {
 	//Delete vao, vbos, and ibo

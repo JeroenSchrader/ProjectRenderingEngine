@@ -7,6 +7,6 @@ private:
 
 public:
 	Renderer();
-	~Renderer();
+	~Renderer() = default;
 	void Draw(unsigned int ibCount);
 };

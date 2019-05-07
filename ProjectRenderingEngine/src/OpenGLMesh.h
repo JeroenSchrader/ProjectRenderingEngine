@@ -14,7 +14,7 @@ private:
 	VertexBufferLayout m_Layout;
 
 public:
-	OpenGLMesh();
+	OpenGLMesh() = default;
 	~OpenGLMesh();
 
 	inline VertexArray* GetVao() { return m_vao; }

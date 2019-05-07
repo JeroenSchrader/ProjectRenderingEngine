@@ -3,14 +3,19 @@
 #include "GLM/gtx/transform.hpp"
 #include "GLM/gtc/matrix_transform.hpp"
 
-Entity::Entity(Mesh* mesh, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
-	: m_Mesh(mesh), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
+#include "Mesh.h"
+#include "Material.h"
+#include "Shader.h"
+
+Entity::Entity(Mesh* mesh, Material* material, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
+	: m_Mesh(mesh), m_Material(material), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
 {
 }
 
 Entity::~Entity()
 {
 	(*m_Mesh).~Mesh();
+	(*m_Material).~Material();
 }
 
 glm::mat4 Entity::GetTransformationMatrix()
@@ -24,4 +29,24 @@ glm::mat4 Entity::GetTransformationMatrix()
 	glm::mat4 transformationMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 
 	return transformationMatrix;	
+}
+
+const void Entity::BindMaterial()
+{
+	m_Material->BindShader();
+}
+
+const void Entity::SetProjectionMatrix(glm::mat4 projectionMatrix)
+{
+	m_Material->GetShader()->SetUniformMatrix4f("u_projectionMatrix", projectionMatrix);
+}
+
+const void Entity::SetViewMatrix(glm::mat4 viewMatrix)
+{
+	m_Material->GetShader()->SetUniformMatrix4f("u_viewMatrix", viewMatrix);
+}
+
+const void Entity::SetTransformationMatrix(glm::mat4 transformationMatrix)
+{
+	m_Material->GetShader()->SetUniformMatrix4f("u_transformationMatrix", transformationMatrix);
 }

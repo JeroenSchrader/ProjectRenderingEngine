@@ -9,10 +9,6 @@ Renderer::Renderer()
 	}
 }
 
-Renderer::~Renderer()
-{
-}
-
 void Renderer::Draw(unsigned int ibCount)
 {
 	glDrawElements(GL_TRIANGLES, ibCount, GL_UNSIGNED_INT, nullptr);
