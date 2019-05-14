@@ -31,9 +31,14 @@ int Shader::GetUniformLocation(const std::string & name)
 {
 	int location = glGetUniformLocation(m_Id, name.c_str());
 	if (location == -1) {
-		std::cout << "WARNING: Uniform location for uniform " << name << " not found" << std::endl;
+		std::cout << "WARNING: Uniform location for uniform " << name << " not found. Uniform might not be defined OR used in shader." << std::endl;
 	}
 	return location;
+}
+
+void Shader::SetUniform1f(const std::string& name, float f1)
+{
+	glUniform1f(GetUniformLocation(name), f1);	
 }
 
 void Shader::SetUniform3f(const std::string & name, float f1, float f2, float f3)

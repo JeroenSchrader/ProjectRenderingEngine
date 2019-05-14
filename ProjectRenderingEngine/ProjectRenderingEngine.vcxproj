@@ -145,6 +145,7 @@
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\ObjLoader.cpp" />
     <ClCompile Include="src\OpenGLMesh.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\ObjLoader.h" />
     <ClInclude Include="src\OpenGLMesh.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\ResourceManager.h" />
@@ -169,8 +171,9 @@
     <ClInclude Include="src\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Shaders\BasicShader.shader" />
-    <None Include="src\Shaders\TestShader.shader" />
+    <None Include="src\Shaders\BasicLightingShader.glsl" />
+    <None Include="src\Shaders\BasicShader.glsl" />
+    <None Include="src\Shaders\TestShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

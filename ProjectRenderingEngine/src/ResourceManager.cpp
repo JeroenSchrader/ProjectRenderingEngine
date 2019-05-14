@@ -5,6 +5,7 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 
+#include "ObjLoader.h"
 #include "Entity.h"
 #include "OpenGLMesh.h"
 
@@ -12,7 +13,7 @@
 #include "Material.h"
 
 //Basic 3D Cube vertices
-std::vector<float> vertices{
+std::vector<float> cubeVertices{
 	//Positions				//Colors
 	-0.8f, -0.8f, 0.8f,		0.0f, 1.0f, 0.0f,	//front lower left	- index 0
 	-0.8f,  0.8f, 0.8f,		1.0f, 0.0f, 0.0f,	//front upper left	- index 1
@@ -26,7 +27,7 @@ std::vector<float> vertices{
 };
 
 //Basic 3D Cube indices
-std::vector<unsigned int> indices{
+std::vector<unsigned int> cubeIndices{
 	//front plane
 	0, 1, 2,
 	2, 3, 0,
@@ -52,9 +53,9 @@ std::vector<unsigned int> indices{
 	1, 0, 4
 };
 
-Mesh* ResourceManager::LoadBasicCubeMesh(std::string name)
+OpenGLMesh* ResourceManager::LoadBasicCubeMesh(std::string name)
 {
-	OpenGLMesh* mesh = new OpenGLMesh;
+	OpenGLMesh* mesh = new OpenGLMesh();
 
 	m_Meshes[name] = mesh;
 
@@ -62,9 +63,9 @@ Mesh* ResourceManager::LoadBasicCubeMesh(std::string name)
 	layout.Push<float>(3); //Positions, location 0
 	layout.Push<float>(3); //UV's,	location 1
 
-	mesh->GetVertices() = vertices;
+	mesh->GetVertices() = cubeVertices;
 	mesh->GetLayout() = layout;
-	mesh->GetIndices() = indices;
+	mesh->GetIndices() = cubeIndices;
 	mesh->CreateOpenGLData();
 
 	return mesh;
@@ -80,7 +81,39 @@ Material* ResourceManager::LoadMaterial(std::string name, const std::string& sha
 
 const void ResourceManager::LoadBasicCube(std::string name, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
-	Mesh* mesh = LoadBasicCubeMesh(name);
+	OpenGLMesh* mesh = LoadBasicCubeMesh(name);
+	Material* material = LoadMaterial(name, shaderPath);
+
+	Entity* entity = new Entity(mesh, material, position, rotation, scale);
+	m_Entities[name] = entity;
+}
+
+const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+{
+	std::vector<float> vertices;
+	std::vector<unsigned int> indices;
+
+	ObjFileFormat format;
+
+	loader->Load(file, vertices, indices, format);
+
+	VertexBufferLayout layout;
+	layout.Push<float>(3); //Positions, location 0
+	if (format.HasTextures) {
+		layout.Push<float>(2); //UV's,		location 1
+	}
+	if (format.HasNormals) {
+		layout.Push<float>(3); //Normals,	location 2
+	}
+	
+	OpenGLMesh* mesh = new OpenGLMesh();
+	m_Meshes[name] = mesh;
+
+	mesh->GetVertices() = vertices;
+	mesh->GetIndices() = indices;
+	mesh->GetLayout() = layout;
+	mesh->CreateOpenGLData();
+
 	Material* material = LoadMaterial(name, shaderPath);
 
 	Entity* entity = new Entity(mesh, material, position, rotation, scale);

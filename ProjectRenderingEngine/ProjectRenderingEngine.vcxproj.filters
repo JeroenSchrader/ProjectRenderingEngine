@@ -54,6 +54,9 @@
     <ClCompile Include="src\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ObjLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DisplayManager.h">
@@ -98,9 +101,13 @@
     <ClInclude Include="src\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ObjLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Shaders\BasicShader.shader" />
-    <None Include="src\Shaders\TestShader.shader" />
+    <None Include="src\Shaders\BasicLightingShader.glsl" />
+    <None Include="src\Shaders\BasicShader.glsl" />
+    <None Include="src\Shaders\TestShader.glsl" />
   </ItemGroup>
 </Project>
