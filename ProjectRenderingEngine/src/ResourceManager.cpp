@@ -84,7 +84,7 @@ const void ResourceManager::LoadBasicCube(std::string name, const std::string& s
 	OpenGLMesh* mesh = LoadBasicCubeMesh(name);
 	Material* material = LoadMaterial(name, shaderPath);
 
-	Entity* entity = new Entity(mesh, material, position, rotation, scale);
+	Entity* entity = new Entity(name, mesh, material, position, rotation, scale);
 	m_Entities[name] = entity;
 }
 
@@ -116,7 +116,7 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 
 	Material* material = LoadMaterial(name, shaderPath);
 
-	Entity* entity = new Entity(mesh, material, position, rotation, scale);
+	Entity* entity = new Entity(name, mesh, material, position, rotation, scale);	
 	m_Entities[name] = entity;
 }
 

@@ -7,8 +7,8 @@
 #include "Material.h"
 #include "Shader.h"
 
-Entity::Entity(OpenGLMesh* mesh, Material* material, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
-	: m_Mesh(mesh), m_Material(material), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
+Entity::Entity(std::string& name, OpenGLMesh* mesh, Material* material, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
+	: m_Name(name), m_Mesh(mesh), m_Material(material), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
 {
 }
 
@@ -56,7 +56,7 @@ const void Entity::SetLightingInformation(LightingInformation& information)
 	m_Material->GetShader()->SetUniform1f("u_ambientLightStrength", information.AmbientStrength);
 	m_Material->GetShader()->SetUniform3f("u_ambientLightColor", information.AmbientColor.x, information.AmbientColor.y, information.AmbientColor.z);
 	m_Material->GetShader()->SetUniform3f("u_diffuseLightColor", information.DiffuseColor.x, information.DiffuseColor.y, information.DiffuseColor.z);
-	m_Material->GetShader()->SetUniform3f("u_diffuseLightPosition", information.DiffusePosition.x, information.DiffusePosition.y, information.DiffusePosition.z);
+	m_Material->GetShader()->SetUniform3f("u_lightPosition", information.Position.x, information.Position.y, information.Position.z);
 	m_Material->GetShader()->SetUniform3f("u_specularLightColor", information.SpecularColor.x, information.SpecularColor.y, information.SpecularColor.z);
 	m_Material->GetShader()->SetUniform1f("u_specularLightStrength", information.SpecularStrength);
 	m_Material->GetShader()->SetUniform3f("u_cameraPosition", information.CameraPosition.x, information.CameraPosition.y, information.CameraPosition.z);

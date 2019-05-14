@@ -2,8 +2,7 @@
 #version 330 core
 
 layout(location = 0) in vec3 aPosition;
-layout(location = 1) in vec2 aVertexColor;
-layout(location = 2) in vec3 aNormal;
+layout(location = 1) in vec3 aNormal;
 
 out vec3 fragmentColor;
 out vec3 fragmentPosition;
@@ -15,7 +14,7 @@ uniform mat4 u_projectionMatrix;
 
 void main() {
 	gl_Position = u_projectionMatrix * u_viewMatrix * u_transformationMatrix * vec4(aPosition, 1.0);
-	fragmentColor = vec3(aVertexColor, aVertexColor.x + aVertexColor.y);
+	fragmentColor = vec3(1.0, 1.0, 1.0);
 	fragmentPosition = vec3(u_transformationMatrix * vec4(aPosition, 1.0));
 	normal = aNormal;
 }

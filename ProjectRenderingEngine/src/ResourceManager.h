@@ -23,7 +23,9 @@ public:
 	const void LoadBasicCube(std::string name, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	const void LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
-	std::map<std::string, OpenGLMesh*> GetMeshes() const { return m_Meshes; }
-	std::map<std::string, Entity*> GetEntities() const { return m_Entities; }
-	std::map<std::string, Material*> GetMaterials() const { return m_Materials; }
+	inline std::map<std::string, OpenGLMesh*> GetMeshes() const { return m_Meshes; }
+	inline std::map<std::string, Entity*> GetEntities() const { return m_Entities; }
+	inline std::map<std::string, Material*> GetMaterials() const { return m_Materials; }
+
+	inline Entity* GetEntityByName(std::string name) { return m_Entities[name]; }
 };

@@ -172,7 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\BasicLightingShader.glsl" />
+    <None Include="src\Shaders\BasicLightingShaderNoTexture.glsl" />
     <None Include="src\Shaders\BasicShader.glsl" />
+    <None Include="src\Shaders\LightSourceShader.glsl" />
     <None Include="src\Shaders\TestShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

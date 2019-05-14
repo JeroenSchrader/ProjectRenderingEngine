@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "GLM/vec3.hpp"
 #include "GLM/mat4x4.hpp"
 
@@ -7,12 +8,12 @@ class OpenGLMesh;
 class Material;
 
 struct LightingInformation {
+	glm::vec3 Position;
 	//Ambient
 	glm::vec3 AmbientColor;
 	float AmbientStrength;
 	//Diffuse
 	glm::vec3 DiffuseColor;
-	glm::vec3 DiffusePosition;
 	//Specular
 	glm::vec3 SpecularColor;
 	float SpecularStrength;
@@ -21,6 +22,7 @@ struct LightingInformation {
 
 class Entity {
 private:
+	std::string m_Name;
 	OpenGLMesh* m_Mesh;
 	Material* m_Material;
 
@@ -31,7 +33,7 @@ private:
 	glm::vec3 m_Scale;
 
 public:
-	Entity(OpenGLMesh* mesh, Material* material, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 rotations = glm::vec3(0, 0, 0), glm::vec3 scale = glm::vec3(1, 1, 1));
+	Entity(std::string& name, OpenGLMesh* mesh, Material* material, glm::vec3 position = glm::vec3(0, 0, 0), glm::vec3 rotations = glm::vec3(0, 0, 0), glm::vec3 scale = glm::vec3(1, 1, 1));
 	~Entity();
 
 	glm::mat4 GetTransformationMatrix();
@@ -41,6 +43,9 @@ public:
 	const void SetViewMatrix(glm::mat4 viewMatrix);
 	const void SetTransformationMatrix(glm::mat4 transformationMatrix);
 	const void SetLightingInformation(LightingInformation& information);
+
+	inline glm::vec3& GetPosition() { return m_Position; }
+	inline std::string& GetName() { return m_Name; }
 
 	inline OpenGLMesh* GetMesh() const { return m_Mesh; }
 	inline Material* GetMaterial() const { return m_Material; }
