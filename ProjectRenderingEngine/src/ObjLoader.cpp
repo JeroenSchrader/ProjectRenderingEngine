@@ -5,6 +5,7 @@
 #include "GLM/vec3.hpp"
 #include "GLM/vec2.hpp"
 #include "Material.h"
+#include "Texture.h"
 
 void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat &format)
 {
@@ -85,7 +86,7 @@ void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertex
 	}
 }
 
-void ObjLoader::LoadMaterial(const std::string& filename, Material& material)
+void ObjLoader::LoadMaterial(const std::string& filename, Material& material, Texture& texture)
 {
 	std::ifstream fileStream(filename);
 	if (fileStream.fail()) {
@@ -102,6 +103,10 @@ void ObjLoader::LoadMaterial(const std::string& filename, Material& material)
 		else if (line.find("Ka ") != std::string::npos) {
 			std::vector<std::string> splitString = SplitLine(line);
 			material.GetAmbient() = glm::vec3(std::stof(splitString[0]), std::stof(splitString[1]), std::stof(splitString[2]));
+		}
+		else if (line.find("map_Kd ") != std::string::npos) {
+			std::vector<std::string> splitString = SplitLine(line);
+			texture.LoadNewTexture("res/textures/" + splitString[0]);
 		}
 		else if (line.find("Kd ") != std::string::npos) {
 			std::vector<std::string> splitString = SplitLine(line);

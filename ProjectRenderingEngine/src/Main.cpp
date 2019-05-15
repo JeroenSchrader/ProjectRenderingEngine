@@ -23,12 +23,12 @@ int main() {
 	resourceManager.LoadModel("Cube2", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager.LoadModel("Wheel1", "res/models/PorscheWheel.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(3, 0, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager.LoadModel("Wheel2", "res/models/PorscheWheel.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadModel("Ground", "res/models/Ground.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, -10, 2), glm::vec3(0, 0, 0), glm::vec3(4, 1, 4));
-	resourceManager.LoadModel("Light", "res/models/cubeTest.obj", &loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 30, 0), glm::vec3(0, 0, 0), glm::vec3(0.4, 0.4, 0.4));
+	resourceManager.LoadModel("Ground", "res/models/GroundTexture.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, -2, 2), glm::vec3(0, 0, 0), glm::vec3(4, 1, 4));
+	resourceManager.LoadModel("Light", "res/models/sphere.obj", &loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 30, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
 	LightingInformation lightInformation;
 	lightInformation.AmbientColor = glm::vec3(1.0, 1.0, 1.0);
-	lightInformation.AmbientStrength = 0.1;
+	lightInformation.AmbientStrength = 0.4;
 	lightInformation.DiffuseColor = glm::vec3(1.0, 1.0, 1.0);
 	lightInformation.DiffuseStrength = 1.0f;
 	lightInformation.SpecularColor = glm::vec3(1.0, 1.0, 1.0);
@@ -54,8 +54,6 @@ int main() {
 
 		for(const auto& entity : resourceManager.GetEntities()){
 			Entity* entityP = entity.second;
-
-			//Todo: Save uniform variables in Material class 
 			entityP->Bind();
 			if (entityP->GetName().find("Light") == std::string::npos) {
 				entityP->SetLightingInformation(lightInformation);

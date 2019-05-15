@@ -8,12 +8,14 @@ class OpenGLMesh;
 class Material;
 class Entity;
 class ObjLoader;
+class Texture;
 
 class ResourceManager {
 private:
 	std::map<std::string, OpenGLMesh*> m_Meshes;
 	std::map<std::string, Entity*> m_Entities;
 	std::map<std::string, Material*> m_Materials;
+	std::map<std::string, Texture*> m_Textures;
 public:
 	ResourceManager() = default;
 	~ResourceManager() = default;
@@ -25,6 +27,10 @@ public:
 	inline std::map<std::string, OpenGLMesh*> GetMeshes() const { return m_Meshes; }
 	inline std::map<std::string, Entity*> GetEntities() const { return m_Entities; }
 	inline std::map<std::string, Material*> GetMaterials() const { return m_Materials; }
+	inline std::map<std::string, Texture*> GetTextures() const { return m_Textures; }
 
+	inline OpenGLMesh* GetMeshByName(std::string name) { return m_Meshes[name]; }
 	inline Entity* GetEntityByName(std::string name) { return m_Entities[name]; }
+	inline Material* GetMaterialByName(std::string name) { return m_Materials[name]; }
+	inline Texture* GetTextureByName(std::string name) { return m_Textures[name]; }
 };

@@ -4,6 +4,7 @@
 #include <string>
 
 class Material;
+class Texture;
 
 struct ObjFileFormat {
 	bool HasTextures;
@@ -27,5 +28,5 @@ public:
 	~ObjLoader() = default;
 
 	void LoadMesh(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat& format);
-	void LoadMaterial(const std::string& filename, Material& material);
+	void LoadMaterial(const std::string& filename, Material& material, Texture& texture);
 };

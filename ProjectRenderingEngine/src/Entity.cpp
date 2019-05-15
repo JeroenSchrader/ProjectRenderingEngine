@@ -6,9 +6,10 @@
 #include "OpenGLMesh.h"
 #include "Material.h"
 #include "Shader.h"
+#include "Texture.h"
 
-Entity::Entity(std::string& name, OpenGLMesh* mesh, Material* material, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
-	: m_Name(name), m_Mesh(mesh), m_Material(material), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
+Entity::Entity(std::string& name, OpenGLMesh* mesh, Material* material, Texture* texture, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
+	: m_Name(name), m_Mesh(mesh), m_Material(material), m_Texture(texture), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
 {
 }
 
@@ -34,6 +35,7 @@ glm::mat4 Entity::GetTransformationMatrix()
 const void Entity::Bind() {
 	m_Mesh->GetVao()->Bind();
 	m_Material->BindShader();
+	m_Texture->Bind();
 }
 
 const void Entity::SetProjectionMatrix(glm::mat4 projectionMatrix)

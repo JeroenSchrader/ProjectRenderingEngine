@@ -13,6 +13,7 @@
 
 #include "Shader.h"
 #include "Material.h"
+#include "Texture.h"
 
 Material* ResourceManager::LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess)
 {
@@ -56,11 +57,14 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 	mesh->GetLayout() = layout;
 	mesh->CreateOpenGLData();
 
+	Texture* texture = new Texture();
+	m_Textures[name] = texture;
+
 	//TODO, load object materials
 	Material* material = LoadMaterial(name, shaderPath, glm::vec3(1.0,1.0,1.0), 128);
-	loader->LoadMaterial(file.replace(file.end()-4, file.end(), ".mtl"), *material);
+	loader->LoadMaterial(file.replace(file.end()-4, file.end(), ".mtl"), *material, *texture);
 
-	Entity* entity = new Entity(name, mesh, material, position, rotation, scale);	
+	Entity* entity = new Entity(name, mesh, material, texture, position, rotation, scale);	
 	m_Entities[name] = entity;
 }
 

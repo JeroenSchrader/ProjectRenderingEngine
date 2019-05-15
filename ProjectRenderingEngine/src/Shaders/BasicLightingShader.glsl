@@ -2,11 +2,12 @@
 #version 330 core
 
 layout(location = 0) in vec3 aPosition;
-layout(location = 1) in vec2 aVertexColor;
+layout(location = 1) in vec2 aTextureCoords;
 layout(location = 2) in vec3 aNormal;
 
 out vec3 fragmentColor;
 out vec3 fragmentPosition;
+out vec2 textureCoordinate;
 out vec3 normal;
 
 uniform mat4 u_transformationMatrix;
@@ -15,7 +16,8 @@ uniform mat4 u_projectionMatrix;
 
 void main() {
 	gl_Position = u_projectionMatrix * u_viewMatrix * u_transformationMatrix * vec4(aPosition, 1.0);
-	fragmentColor = vec3(aVertexColor, aVertexColor.x + aVertexColor.y);
+	textureCoordinate = aTextureCoords;
+	fragmentColor = vec3(1.0, 1.0, 1.0);
 	fragmentPosition = vec3(u_transformationMatrix * vec4(aPosition, 1.0));
 	normal = aNormal;
 }
@@ -32,6 +34,7 @@ struct Material{
 
 in vec3 fragmentColor;
 in vec3 fragmentPosition;
+in vec2 textureCoordinate;
 in vec3 normal;
 
 out vec4 color;
@@ -46,7 +49,11 @@ uniform vec3 u_specularLightColor;
 uniform float u_specularLightStrength;
 uniform Material u_Material;
 
+uniform sampler2D u_Texture;
+
 void main() {
+	vec4 texSample = texture(u_Texture, textureCoordinate);
+
 	//Ambient
 	vec3 ambient = u_ambientLightStrength * (u_ambientLightColor * u_Material.ambient);
 
@@ -62,7 +69,7 @@ void main() {
 	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), u_Material.shininess); //the higher the last value, the more reflective the surface.
 	vec3 specular = u_specularLightColor * u_specularLightStrength * (spec * u_Material.specular);
 
-	vec3 finalColor = (ambient + diffuse + specular) * fragmentColor;
+	vec4 finalColor = (vec4(ambient, 1.0) + vec4(diffuse, 1.0) + vec4(specular, 1.0)) * texSample;
 
-	color = vec4(finalColor, 1.0);
+	color = finalColor;
 }
