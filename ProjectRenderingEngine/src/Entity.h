@@ -14,6 +14,7 @@ struct LightingInformation {
 	float AmbientStrength;
 	//Diffuse
 	glm::vec3 DiffuseColor;
+	float DiffuseStrength;
 	//Specular
 	glm::vec3 SpecularColor;
 	float SpecularStrength;

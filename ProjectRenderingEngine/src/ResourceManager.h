@@ -18,9 +18,8 @@ public:
 	ResourceManager() = default;
 	~ResourceManager() = default;
 
-	OpenGLMesh* LoadBasicCubeMesh(std::string name);
-	Material* LoadMaterial(std::string name, const std::string& shaderPath);
-	const void LoadBasicCube(std::string name, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess);
+	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 color, float shininess);
 	const void LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
 	inline std::map<std::string, OpenGLMesh*> GetMeshes() const { return m_Meshes; }

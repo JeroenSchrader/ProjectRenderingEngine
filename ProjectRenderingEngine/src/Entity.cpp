@@ -56,10 +56,17 @@ const void Entity::SetLightingInformation(LightingInformation& information)
 	m_Material->GetShader()->SetUniform1f("u_ambientLightStrength", information.AmbientStrength);
 	m_Material->GetShader()->SetUniform3f("u_ambientLightColor", information.AmbientColor.x, information.AmbientColor.y, information.AmbientColor.z);
 	m_Material->GetShader()->SetUniform3f("u_diffuseLightColor", information.DiffuseColor.x, information.DiffuseColor.y, information.DiffuseColor.z);
+	m_Material->GetShader()->SetUniform1f("u_diffuseLightStrength", information.DiffuseStrength);
 	m_Material->GetShader()->SetUniform3f("u_lightPosition", information.Position.x, information.Position.y, information.Position.z);
 	m_Material->GetShader()->SetUniform3f("u_specularLightColor", information.SpecularColor.x, information.SpecularColor.y, information.SpecularColor.z);
 	m_Material->GetShader()->SetUniform1f("u_specularLightStrength", information.SpecularStrength);
 	m_Material->GetShader()->SetUniform3f("u_cameraPosition", information.CameraPosition.x, information.CameraPosition.y, information.CameraPosition.z);
+
+	Material* material = GetMaterial();
+	m_Material->GetShader()->SetUniform3f("u_Material.ambient", material->GetAmbient().x, material->GetAmbient().y, material->GetAmbient().z);
+	m_Material->GetShader()->SetUniform3f("u_Material.diffuse", material->GetDiffuse().x, material->GetDiffuse().y, material->GetDiffuse().z);
+	m_Material->GetShader()->SetUniform3f("u_Material.specular", material->GetSpecular().x, material->GetSpecular().y, material->GetSpecular().z);
+	m_Material->GetShader()->SetUniform1f("u_Material.shininess", material->GetShininess());
 }
 
 

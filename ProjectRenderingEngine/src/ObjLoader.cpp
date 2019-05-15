@@ -4,10 +4,15 @@
 #include <sstream>
 #include "GLM/vec3.hpp"
 #include "GLM/vec2.hpp"
+#include "Material.h"
 
-void ObjLoader::Load(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat &format)
+void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat &format)
 {
 	std::ifstream fileStream(filename);
+	if (fileStream.fail()) {
+		std::cout << "Failed to open filestream for " << filename << std::endl;
+		return;
+	}
 	std::string line;
 
 	std::vector<glm::vec3> loadedVertices;
@@ -26,18 +31,17 @@ void ObjLoader::Load(const std::string& filename, std::vector<float>& vertexData
 		}
 
 		if (line.find("v ") != std::string::npos) {
-			std::vector<std::string> splitString = SplitVertexLine(line);
+			std::vector<std::string> splitString = SplitLine(line);
 			glm::vec3 vertex(std::stof(splitString[0]), std::stof(splitString[1]), std::stof(splitString[2]));
 			loadedVertices.push_back(vertex);
 		}
 		else if (line.find("vt ") != std::string::npos) {
-			std::vector<std::string> splitString = SplitVertexLine(line);
+			std::vector<std::string> splitString = SplitLine(line);
 			glm::vec2 texture(std::stof(splitString[0]), std::stof(splitString[1]));
 			loadedTextures.push_back(texture);
 		}
 		else if (line.find("vn ") != std::string::npos) {
-
-			std::vector<std::string> splitString = SplitVertexLine(line);
+			std::vector<std::string> splitString = SplitLine(line);
 			glm::vec3 normal(std::stof(splitString[0]), std::stof(splitString[1]), std::stof(splitString[2]));
 			loadedNormals.push_back(normal);
 		}
@@ -46,7 +50,7 @@ void ObjLoader::Load(const std::string& filename, std::vector<float>& vertexData
 				finishedFacing = false;
 			}
 
-			std::vector<std::string> splitString = SplitVertexLine(line);
+			std::vector<std::string> splitString = SplitLine(line);
 			for (size_t i = 0; i < 3; i++)
 			{
 				std::vector<std::string> faceData = SplitFaceLine(splitString[i]);
@@ -81,7 +85,36 @@ void ObjLoader::Load(const std::string& filename, std::vector<float>& vertexData
 	}
 }
 
-std::vector<std::string> ObjLoader::SplitVertexLine(std::string line) {
+void ObjLoader::LoadMaterial(const std::string& filename, Material& material)
+{
+	std::ifstream fileStream(filename);
+	if (fileStream.fail()) {
+		std::cout << "Failed to open filestream for " << filename << std::endl;
+		return;
+	}
+	std::string line;
+
+	while (std::getline(fileStream, line)) {
+		if (line.find("Ns ") != std::string::npos) {
+			std::vector<std::string> splitString = SplitLine(line);
+			material.GetShininess() = std::stof(splitString[0]);
+		}
+		else if (line.find("Ka ") != std::string::npos) {
+			std::vector<std::string> splitString = SplitLine(line);
+			material.GetAmbient() = glm::vec3(std::stof(splitString[0]), std::stof(splitString[1]), std::stof(splitString[2]));
+		}
+		else if (line.find("Kd ") != std::string::npos) {
+			std::vector<std::string> splitString = SplitLine(line);
+			material.GetDiffuse() = glm::vec3(std::stof(splitString[0]), std::stof(splitString[1]), std::stof(splitString[2]));
+		}
+		else if (line.find("Ks ") != std::string::npos) {
+			std::vector<std::string> splitString = SplitLine(line);
+			material.GetSpecular() = glm::vec3(std::stof(splitString[0]), std::stof(splitString[1]), std::stof(splitString[2]));
+		}
+	}
+}
+
+std::vector<std::string> ObjLoader::SplitLine(std::string line) {
 	std::vector<std::string> splitString = Split(line, ' ');
 	splitString.erase(splitString.begin()); //remove first element as it's not actual data
 	return splitString;

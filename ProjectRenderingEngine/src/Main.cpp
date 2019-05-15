@@ -19,17 +19,10 @@ int main() {
 	ObjLoader loader;
 
 	ResourceManager resourceManager;
-	/*resourceManager.LoadBasicCube("Cube1", "src/Shaders/BasicLightingShader.glsl", glm::vec3(0,0,0), glm::vec3(0,0,0), glm::vec3(1,1,1));
-	resourceManager.LoadBasicCube("Cube2", "src/Shaders/BasicLightingShader.glsl", glm::vec3(2, 0, 0), glm::vec3(4, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadBasicCube("Cube3", "src/Shaders/BasicLightingShader.glsl", glm::vec3(6, 3, 0), glm::vec3(10, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadBasicCube("Cube4", "src/Shaders/BasicLightingShader.glsl", glm::vec3(2, -5, 0), glm::vec3(30, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadBasicCube("Cube5", "src/Shaders/BasicLightingShader.glsl", glm::vec3(3, 0, 6), glm::vec3(60, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadBasicCube("Cube5", "src/Shaders/BasicLightingShader.glsl", glm::vec3(-3, 0, 3), glm::vec3(190, 0, 0), glm::vec3(1, 1, 1));*/
-
-	resourceManager.LoadModel("Test1", "res/models/cubeTest.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 0, 6), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadModel("Test2", "res/models/cubeTest.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadModel("Test3", "res/models/PorscheWheel.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(3, 0, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager.LoadModel("Test4", "res/models/PorscheWheel.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager.LoadModel("Cube1", "res/models/cubeTest.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 0, 6), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager.LoadModel("Cube2", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager.LoadModel("Wheel1", "res/models/PorscheWheel.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(3, 0, -5), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager.LoadModel("Wheel2", "res/models/PorscheWheel.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager.LoadModel("Ground", "res/models/Ground.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, -10, 2), glm::vec3(0, 0, 0), glm::vec3(4, 1, 4));
 	resourceManager.LoadModel("Light", "res/models/cubeTest.obj", &loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 30, 0), glm::vec3(0, 0, 0), glm::vec3(0.4, 0.4, 0.4));
 
@@ -37,6 +30,7 @@ int main() {
 	lightInformation.AmbientColor = glm::vec3(1.0, 1.0, 1.0);
 	lightInformation.AmbientStrength = 0.1;
 	lightInformation.DiffuseColor = glm::vec3(1.0, 1.0, 1.0);
+	lightInformation.DiffuseStrength = 1.0f;
 	lightInformation.SpecularColor = glm::vec3(1.0, 1.0, 1.0);
 	lightInformation.SpecularStrength = 0.1;
 
@@ -52,6 +46,7 @@ int main() {
 		glm::vec3 cameraPosition = camera.GetPosition();
 		lightInformation.CameraPosition = cameraPosition;
 
+		//Rotate light around the world
 		Entity* light = resourceManager.GetEntityByName("Light");
 		light->GetPosition().x = 1.0f + sin(glfwGetTime() * .3) * 60.0f;
 		light->GetPosition().z = 1.0f + -cos(glfwGetTime() * .3) * 60.0f;

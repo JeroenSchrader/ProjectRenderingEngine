@@ -23,6 +23,13 @@ void main() {
 #shader fragment
 #version 330 core
 
+struct Material{
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	float shininess;
+};
+
 in vec3 fragmentColor;
 in vec3 fragmentPosition;
 in vec3 normal;
@@ -32,26 +39,28 @@ out vec4 color;
 uniform vec3 u_ambientLightColor;
 uniform float u_ambientLightStrength;
 uniform vec3 u_diffuseLightColor;
+uniform float u_diffuseLightStrength;
 uniform vec3 u_lightPosition;
 uniform vec3 u_cameraPosition;
 uniform vec3 u_specularLightColor;
 uniform float u_specularLightStrength;
+uniform Material u_Material;
 
 void main() {
 	//Ambient
-	vec3 ambient = u_ambientLightStrength * u_ambientLightColor;
+	vec3 ambient = u_ambientLightStrength * (u_ambientLightColor * u_Material.ambient);
 
 	//Diffuse
 	vec3 norm = normalize(normal);
 	vec3 lightDirection = normalize(u_lightPosition - fragmentPosition);
 	float lightToFragAngle = max(dot(norm, lightDirection), 0.0);
-	vec3 diffuse = lightToFragAngle * u_diffuseLightColor;
+	vec3 diffuse = u_diffuseLightStrength * u_diffuseLightColor * (lightToFragAngle * u_Material.diffuse);
 
 	//Specular
 	vec3 viewDirection = normalize(u_cameraPosition - fragmentPosition);
 	vec3 reflectDirection = reflect(-lightDirection, norm);
-	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 128); //the higher the last value, the more reflective the surface.
-	vec3 specular = u_specularLightStrength * spec * u_specularLightColor;
+	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), u_Material.shininess); //the higher the last value, the more reflective the surface.
+	vec3 specular = u_specularLightColor * u_specularLightStrength * (spec * u_Material.specular);
 
 	vec3 finalColor = (ambient + diffuse + specular) * fragmentColor;
 
