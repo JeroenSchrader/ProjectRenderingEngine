@@ -24,6 +24,7 @@ public:
 
 	int GetUniformLocation(const std::string& name);
 	void SetUniform1f(const std::string& name, float f1);
+	void SetUniform1i(const std::string& name, int i1);
 	void SetUniform3f(const std::string& name, float f1, float f2, float f3);
 	void SetUniform4f(const std::string& name, float f1, float f2, float f3, float f4);
 	void SetUniformMatrix4f(const std::string& name, glm::mat4& matrix);

@@ -86,7 +86,7 @@ void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertex
 	}
 }
 
-void ObjLoader::LoadMaterial(const std::string& filename, Material& material, Texture& texture)
+void ObjLoader::LoadMaterial(const std::string& filename, Material& material, Texture& textureMap, Texture& normalMap)
 {
 	std::ifstream fileStream(filename);
 	if (fileStream.fail()) {
@@ -106,7 +106,11 @@ void ObjLoader::LoadMaterial(const std::string& filename, Material& material, Te
 		}
 		else if (line.find("map_Kd ") != std::string::npos) {
 			std::vector<std::string> splitString = SplitLine(line);
-			texture.LoadNewTexture("res/textures/" + splitString[0]);
+			textureMap.LoadNewTexture("res/textures/" + splitString[0], TextureTypes::TextureMap);
+		}
+		else if (line.find("map_Bump ") != std::string::npos) {
+			std::vector<std::string> splitString = SplitLine(line);
+			normalMap.LoadNewTexture("res/normals/" + splitString[0], TextureTypes::NormalMap);
 		}
 		else if (line.find("Kd ") != std::string::npos) {
 			std::vector<std::string> splitString = SplitLine(line);

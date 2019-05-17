@@ -4,9 +4,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Stb/stb_image.h"
 
-Texture::Texture(std::string file)
+Texture::Texture(std::string file, TextureTypes type)
+	: m_TextureType(type)
 {
-	LoadNewTexture(file);
+	LoadNewTexture(file, type);
 }
 
 Texture::~Texture()
@@ -14,9 +15,12 @@ Texture::~Texture()
 	glDeleteTextures(1, &m_Id);
 }
 
-void Texture::LoadNewTexture(std::string file)
+void Texture::LoadNewTexture(std::string file, TextureTypes type)
 {
+	m_TextureType = type;
+
 	glGenTextures(1, &m_Id);
+	glActiveTexture((int)type);
 	glBindTexture(GL_TEXTURE_2D, m_Id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -25,9 +29,9 @@ void Texture::LoadNewTexture(std::string file)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load(file.c_str(), &m_Width, &m_Height, &m_NrOfChannels, 0);
+	unsigned char* data = stbi_load(file.c_str(), &m_Width, &m_Height, &m_NrOfChannels, 4);
 	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
@@ -36,8 +40,9 @@ void Texture::LoadNewTexture(std::string file)
 	stbi_image_free(data);
 }
 
-void Texture::Bind() const
+void Texture::Bind()
 {
+	glActiveTexture((int)GetTextureType());
 	glBindTexture(GL_TEXTURE_2D, m_Id);
 }
 

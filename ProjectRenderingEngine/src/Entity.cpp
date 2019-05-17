@@ -8,8 +8,8 @@
 #include "Shader.h"
 #include "Texture.h"
 
-Entity::Entity(std::string& name, OpenGLMesh* mesh, Material* material, Texture* texture, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
-	: m_Name(name), m_Mesh(mesh), m_Material(material), m_Texture(texture), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
+Entity::Entity(std::string& name, OpenGLMesh* mesh, Material* material, Texture* textureMap, Texture* normalMap, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
+	: m_Name(name), m_Mesh(mesh), m_Material(material), m_TextureMap(textureMap), m_NormalMap(normalMap), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
 {
 }
 
@@ -35,7 +35,12 @@ glm::mat4 Entity::GetTransformationMatrix()
 const void Entity::Bind() {
 	m_Mesh->GetVao()->Bind();
 	m_Material->BindShader();
-	m_Texture->Bind();
+	m_NormalMap->Bind();
+	m_TextureMap->Bind();
+	if (GetName().find("Light") == std::string::npos) {
+		m_Material->GetShader()->SetUniform1i("u_TextureMap", (int)TextureTypes::TextureMap);
+		m_Material->GetShader()->SetUniform1i("u_NormalMap", (int)TextureTypes::NormalMap);
+	}
 }
 
 const void Entity::SetProjectionMatrix(glm::mat4 projectionMatrix)

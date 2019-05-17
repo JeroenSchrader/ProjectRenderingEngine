@@ -50,7 +50,6 @@ uniform float u_specularLightStrength;
 uniform Material u_Material;
 
 uniform sampler2D u_TextureMap;
-uniform sampler2D u_NormalMap;
 
 void main() {
 	vec4 texSample = texture(u_TextureMap, textureCoordinate);
@@ -59,7 +58,7 @@ void main() {
 	vec3 ambient = u_ambientLightStrength * (u_ambientLightColor * u_Material.ambient);
 
 	//Calculate normals of normal map
-	vec3 norm = 2.0 * texture(u_NormalMap, textureCoordinate).rgb - 1.0;
+	vec3 norm = normalize(normal);
 
 	//Diffuse
 	vec3 lightDirection = normalize(u_lightPosition - fragmentPosition);

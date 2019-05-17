@@ -57,14 +57,17 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 	mesh->GetLayout() = layout;
 	mesh->CreateOpenGLData();
 
-	Texture* texture = new Texture();
-	m_Textures[name] = texture;
+	Texture* textureMap = new Texture();
+	m_TextureMaps[name] = textureMap;
+
+	Texture* normalMap = new Texture();
+	m_NormalMaps[name] = normalMap;
 
 	//TODO, load object materials
 	Material* material = LoadMaterial(name, shaderPath, glm::vec3(1.0,1.0,1.0), 128);
-	loader->LoadMaterial(file.replace(file.end()-4, file.end(), ".mtl"), *material, *texture);
+	loader->LoadMaterial(file.replace(file.end()-4, file.end(), ".mtl"), *material, *textureMap, *normalMap);
 
-	Entity* entity = new Entity(name, mesh, material, texture, position, rotation, scale);	
+	Entity* entity = new Entity(name, mesh, material, textureMap, normalMap, position, rotation, scale);
 	m_Entities[name] = entity;
 }
 
