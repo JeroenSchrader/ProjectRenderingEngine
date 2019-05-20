@@ -10,7 +10,6 @@ Camera::Camera(InputManager* inputManager, float moveSpeed, float turnSpeed, flo
 	: m_InputManager(inputManager), m_MoveSpeed(moveSpeed), m_TurnSpeed(turnSpeed),
 		m_ProjectionMatrix(glm::perspective(glm::radians(FoV), (float)1280 / (float)720, nearPlane, farPlane))
 {
-	double lastTime = 0.0f;	
 }
 
 Camera::~Camera()

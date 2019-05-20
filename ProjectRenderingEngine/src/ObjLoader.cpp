@@ -55,17 +55,17 @@ void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertex
 			for (size_t i = 0; i < 3; i++)
 			{
 				std::vector<std::string> faceData = SplitFaceLine(splitString[i]);
-				glm::vec3 position = loadedVertices[std::stoi(faceData[0]) - 1];
+				glm::vec3 position = loadedVertices[static_cast<int64_t>(std::stoi(faceData[0])) - 1];
 				vertexData.push_back(position.x);
 				vertexData.push_back(position.y);
 				vertexData.push_back(position.z);
 				if (faceData.size() > 2) {
 					format.HasTextures = true;
 					format.HasNormals= true;
-					glm::vec2 texture = loadedTextures[std::stoi(faceData[1]) - 1];
+					glm::vec2 texture = loadedTextures[static_cast<int64_t>(std::stoi(faceData[1])) - 1];
 					vertexData.push_back(texture.x);
 					vertexData.push_back(texture.y);
-					glm::vec3 normal = loadedNormals[std::stoi(faceData[2]) - 1];
+					glm::vec3 normal = loadedNormals[static_cast<int64_t>(std::stoi(faceData[2])) - 1];
 					vertexData.push_back(normal.x);
 					vertexData.push_back(normal.y);
 					vertexData.push_back(normal.z);
@@ -73,7 +73,7 @@ void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertex
 				else {
 					format.HasTextures = false;
 					format.HasNormals = true;
-					glm::vec3 normal = loadedNormals[std::stoi(faceData[1]) - 1];
+					glm::vec3 normal = loadedNormals[static_cast<int64_t>(std::stoi(faceData[1])) - 1];
 					vertexData.push_back(normal.x);
 					vertexData.push_back(normal.y);
 					vertexData.push_back(normal.z);
