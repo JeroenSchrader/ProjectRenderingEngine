@@ -8,11 +8,9 @@ class Texture;
 
 struct ObjFileFormat {
 	bool HasTextures;
-	bool HasNormals;
 
 	ObjFileFormat() {
 		HasTextures = false;
-		HasNormals = false;
 	}
 	~ObjFileFormat() = default;
 };

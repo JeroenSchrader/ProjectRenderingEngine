@@ -29,7 +29,7 @@ void Texture::LoadNewTexture(std::string file, TextureTypes type)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load(file.c_str(), &m_Width, &m_Height, &m_NrOfChannels, 4);
+	unsigned char* data = stbi_load(file.c_str(), &m_Width, &m_Height, &m_NrOfChannels, STBI_rgb_alpha);
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);

@@ -41,14 +41,14 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 	loader->LoadMesh(file, vertices, indices, format);
 
 	VertexBufferLayout layout;
-	layout.Push<float>(3); //Positions, location 0
+	layout.Push<float>(3);		//Positions,	location 0
 	if (format.HasTextures) {
-		layout.Push<float>(2); //UV's,		location 1
+		layout.Push<float>(2);	//UV's,			location 1
+		layout.Push<float>(3);	//Tangents,		location 3 (! Normals are loaded first in the ObjLoader)
+		layout.Push<float>(3);	//Bitangents,	location 4 (! Normals are loaded first in the ObjLoader)
 	}
-	if (format.HasNormals) {
-		layout.Push<float>(3); //Normals,	location 2
-	}
-	
+	layout.Push<float>(3);		//Normals,		location 2
+
 	OpenGLMesh* mesh = new OpenGLMesh();
 	m_Meshes[name] = mesh;
 
@@ -63,7 +63,6 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 	Texture* normalMap = new Texture();
 	m_NormalMaps[name] = normalMap;
 
-	//TODO, load object materials
 	Material* material = LoadMaterial(name, shaderPath, glm::vec3(1.0,1.0,1.0), 128);
 	loader->LoadMaterial(file.replace(file.end()-4, file.end(), ".mtl"), *material, *textureMap, *normalMap);
 

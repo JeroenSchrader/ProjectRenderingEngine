@@ -12,13 +12,21 @@ class Texture;
 
 class ResourceManager {
 private:
+	static ResourceManager* m_Instance;
+	ResourceManager() = default;
+
 	std::map<std::string, OpenGLMesh*> m_Meshes;
 	std::map<std::string, Entity*> m_Entities;
 	std::map<std::string, Material*> m_Materials;
 	std::map<std::string, Texture*> m_TextureMaps;
 	std::map<std::string, Texture*> m_NormalMaps;
 public:
-	ResourceManager() = default;
+	static ResourceManager* GetInstance() {
+		if (!m_Instance) {
+			m_Instance = new ResourceManager;
+			return m_Instance;
+		}
+	}
 	~ResourceManager() = default;
 
 	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess);
