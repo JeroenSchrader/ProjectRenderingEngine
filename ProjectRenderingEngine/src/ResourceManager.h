@@ -22,10 +22,11 @@ private:
 	std::map<std::string, Texture*> m_NormalMaps;
 public:
 	static ResourceManager* GetInstance() {
-		if (!m_Instance) {
-			m_Instance = new ResourceManager;
+		if (m_Instance) {
 			return m_Instance;
 		}
+		m_Instance = new ResourceManager;
+		return m_Instance;
 	}
 	~ResourceManager() = default;
 

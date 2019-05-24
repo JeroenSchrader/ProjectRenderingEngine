@@ -6,7 +6,7 @@
 #include "GLM/vec2.hpp"
 #include "Material.h"
 #include "Texture.h"
-#include "../../Dependencies/GLM/include/GLM/geometric.hpp"
+#include "GLM/geometric.hpp"
 
 void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat &format)
 {
@@ -44,6 +44,9 @@ void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertex
 			std::vector<glm::vec3> positions;
 			std::vector<glm::vec2> textureCoords;
 			std::vector<glm::vec3> normals;
+
+			assert(loadedVertices.size() > 0);
+			assert(loadedNormals.size() > 0);
 
 			for (size_t i = 0; i < 3; i++)
 			{

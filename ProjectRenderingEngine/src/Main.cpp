@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "ResourceManager.h"
 #include "ObjLoader.h"
+#include "GUI.h"
 
 #include "OpenGLMesh.h"
 #include "Entity.h"
@@ -17,15 +18,17 @@ int main() {
 	DisplayManager displayManager(1280, 720, "Rendering Engine by Jeroen Schrader");
 	InputManager inputManager(displayManager.GetWindow());
 	Renderer renderer;
+	GUI gui(displayManager.GetWindow());
 	Camera camera(&inputManager, 0.1f, 0.3f, 90.0f, 0.01f, 1000.0f);
 	ObjLoader loader;
 
 	ResourceManager* resourceManager = resourceManager->GetInstance();
-	resourceManager->LoadModel("Cube2", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 5, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube3", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(10, 5, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube4", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 4, 15), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube5", "res/models/testCubeTexture.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(-10, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube6", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 3, -10), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube2", "res/models/Crate1.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 5, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube3", "res/models/Crate1.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(10, 5, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube4", "res/models/Crate1.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 4, 15), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube5", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(-10, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube6", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(-10, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube7", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 3, -10), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Wheel1", "res/models/PorscheWheelNormal.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(3, 4, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Wheel2", "res/models/PorscheWheelNormal.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Ground", "res/models/GroundTexture.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 90, 0), glm::vec3(1, 1, 1));
@@ -72,11 +75,13 @@ int main() {
 			renderer.Draw(entityP->GetMesh()->GetVertexIndexCount());
 		}
 
+		gui.OnGUIUpdate();
 		displayManager.UpdateDisplay();
 	}
 
 	displayManager.~DisplayManager();
 	inputManager.~InputManager();
+	gui.~GUI();
 
 	return 0;
 }

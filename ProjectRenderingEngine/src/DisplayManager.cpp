@@ -21,6 +21,7 @@ DisplayManager::DisplayManager(unsigned int width, unsigned int height, const ch
 
 DisplayManager::~DisplayManager()
 {
+	glfwDestroyWindow(m_Window);
 	glfwTerminate();
 }
 
