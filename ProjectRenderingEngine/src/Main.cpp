@@ -81,7 +81,7 @@ int main() {
 
 	displayManager.~DisplayManager();
 	inputManager.~InputManager();
-	gui.~GUI();
+	gui.Cleanup();
 
 	return 0;
 }

@@ -7,7 +7,7 @@
 class Camera {
 private:
 	InputManager* m_InputManager;
-	glm::vec3 m_Position = glm::vec3(4.0f, 0.0f, 4.0f);
+	glm::vec3 m_Position = glm::vec3(0.0f, 4.0f, 4.0f);
 	glm::mat4 m_ProjectionMatrix;
 	float m_Pitch = 0.0f;
 	float m_Yaw = 0.0f;

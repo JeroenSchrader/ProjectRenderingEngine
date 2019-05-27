@@ -7,11 +7,11 @@
 class GUI {
 private:
 	ImGuiContext* m_Context;
-	ImGuiIO* m_IO;
 
 public:
 	GUI(GLFWwindow* window);
-	~GUI();
+	~GUI() = default;
 
 	void OnGUIUpdate();
+	void Cleanup();
 };
