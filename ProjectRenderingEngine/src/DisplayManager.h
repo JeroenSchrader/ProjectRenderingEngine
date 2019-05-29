@@ -5,12 +5,22 @@
 
 class DisplayManager {
 private:
+	static DisplayManager* m_Instance;
+	DisplayManager(unsigned int width, unsigned int height, const char* title);
+
 	GLFWwindow* m_Window;
 
 	void InitializeWindow(unsigned int width, unsigned int height, const char* title);
 
 public:
-	DisplayManager(unsigned int width, unsigned int height, const char* title);
+	static DisplayManager* GetInstance() {
+		if (m_Instance) {
+			return m_Instance;
+		}
+		m_Instance = new DisplayManager(1280, 720, "Rendering engine by Jeroen Schrader");
+		return m_Instance;
+	}
+
 	~DisplayManager();
 	void Prepare() const;
 	void UpdateDisplay();

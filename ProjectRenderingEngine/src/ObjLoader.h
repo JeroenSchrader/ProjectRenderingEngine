@@ -17,12 +17,22 @@ struct ObjFileFormat {
 
 class ObjLoader {
 private:
+	static ObjLoader* m_Instance;
+	ObjLoader() = default;
+
 	std::vector<std::string> SplitLine(std::string line);
 	std::vector<std::string> SplitFaceLine(std::string line);
 	std::vector<std::string> Split(std::string str, char delimiter);
 
 public:
-	ObjLoader() = default;
+	static ObjLoader* GetInstance() {
+		if (m_Instance) {
+			return m_Instance;
+		}
+		m_Instance = new ObjLoader();
+		return m_Instance;
+	}
+
 	~ObjLoader() = default;
 
 	void LoadMesh(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat& format);

@@ -11,28 +11,29 @@
 #include "OpenGLMesh.h"
 #include "Entity.h"
 
-ResourceManager* ResourceManager::m_Instance = 0; //Singleton
+//Initialize singletons
+DisplayManager* DisplayManager::m_Instance = 0;
+InputManager* InputManager::m_Instance = 0;
+Renderer* Renderer::m_Instance = 0; 
+ResourceManager* ResourceManager::m_Instance = 0; 
+Camera* Camera::m_Instance = 0;
+ObjLoader* ObjLoader::m_Instance = 0;
 
 int main() {	
 	// !! Create in this order !!
-	DisplayManager displayManager(1280, 720, "Rendering Engine by Jeroen Schrader");
-	InputManager inputManager(displayManager.GetWindow());
-	Renderer renderer;
-	GUI gui(displayManager.GetWindow());
-	Camera camera(&inputManager, 0.1f, 0.3f, 90.0f, 0.01f, 1000.0f);
-	ObjLoader loader;
-
+	DisplayManager* displayManager = DisplayManager::GetInstance();
+	InputManager* inputManager = InputManager::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
+	Camera* camera = Camera::GetInstance();
+	ObjLoader* loader = ObjLoader::GetInstance();
+	GUI gui(displayManager->GetWindow());
 	ResourceManager* resourceManager = resourceManager->GetInstance();
-	resourceManager->LoadModel("Cube2", "res/models/Crate1.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 5, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube3", "res/models/Crate1.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(10, 5, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube4", "res/models/Crate1.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 4, 15), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube5", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(-10, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube6", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(-10, 3, 3), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube7", "res/models/cubeTestMaterial.obj", &loader, "src/Shaders/BasicLightingShaderNoTexture.glsl", glm::vec3(0, 3, -10), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Wheel1", "res/models/PorscheWheelNormal.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(3, 4, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Wheel2", "res/models/PorscheWheelNormal.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/GroundTexture.obj", &loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 90, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Light", "res/models/sphere.obj", &loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 2, 7), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+
+	resourceManager->LoadModel("Cube2", "res/models/Crate1.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 4, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Wheel1", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Wheel2", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Ground", "res/models/GroundTexture.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, -2, 0), glm::vec3(0, 90, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 2, 7), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
 	LightingInformation lightInformation;
 	lightInformation.AmbientColor = glm::vec3(1.0, 1.0, 1.0);
@@ -43,15 +44,15 @@ int main() {
 	lightInformation.SpecularStrength = 0.0;
 
 	/* Loop until the user closes the window or presses the Escape key */
-	while (!inputManager.KeyPressed(GLFW_KEY_ESCAPE) && !displayManager.ShouldWindowClose())
+	while (!inputManager->KeyPressed(GLFW_KEY_ESCAPE) && !displayManager->ShouldWindowClose())
 	{
-		inputManager.HandleInput();
-		camera.Update();
-		displayManager.Prepare();
+		inputManager->HandleInput();
+		camera->Update();
+		displayManager->Prepare();
 
-		glm::mat4 projectionMatrix = camera.GetProjectionMatrix();
-		glm::mat4 viewMatrix = camera.GetViewMatrix();
-		glm::vec3 cameraPosition = camera.GetPosition();
+		glm::mat4 projectionMatrix = camera->GetProjectionMatrix();
+		glm::mat4 viewMatrix = camera->GetViewMatrix();
+		glm::vec3 cameraPosition = camera->GetPosition();
 		lightInformation.CameraPosition = cameraPosition;
 
 		//Rotate light around the world
@@ -72,15 +73,15 @@ int main() {
 			glm::mat4 transformationMatrix = entityP->GetTransformationMatrix();
 			entityP->SetTransformationMatrix(transformationMatrix);
 
-			renderer.Draw(entityP->GetMesh()->GetVertexIndexCount());
+			renderer->Draw(entityP->GetMesh()->GetVertexIndexCount());
 		}
 
 		gui.OnGUIUpdate();
-		displayManager.UpdateDisplay();
+		displayManager->UpdateDisplay();
 	}
 
-	displayManager.~DisplayManager();
-	inputManager.~InputManager();
+	displayManager->~DisplayManager();
+	inputManager->~InputManager();
 	gui.Cleanup();
 
 	return 0;

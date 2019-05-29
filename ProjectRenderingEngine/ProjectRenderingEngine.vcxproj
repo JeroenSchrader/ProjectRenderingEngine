@@ -192,8 +192,6 @@
     <None Include="src\Shaders\BasicLightingShaderNoTexture.glsl" />
     <None Include="src\Shaders\BasicShader.glsl" />
     <None Include="src\Shaders\LightSourceShader.glsl" />
-    <None Include="src\Shaders\TestShader.glsl" />
-    <None Include="src\Shaders\Testtest.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -4,58 +4,59 @@
 
 float mouseClickposX;
 float mouseClickposY;
-bool isMouseDown;
+bool isLeftMouseDown;
+bool isMiddleMouseDown;
 
-Camera::Camera(InputManager* inputManager, float moveSpeed, float turnSpeed, float FoV, float nearPlane, float farPlane)
-	: m_InputManager(inputManager), m_MoveSpeed(moveSpeed), m_TurnSpeed(turnSpeed),
-		m_ProjectionMatrix(glm::perspective(glm::radians(FoV), (float)1280 / (float)720, nearPlane, farPlane))
+Camera::Camera(InputManager* inputManager, float moveSpeed, float turnSpeed, float FoV, float nearPlane, float farPlane, GLFWwindow* window)
+	: m_InputManager(inputManager), m_MoveSpeed(moveSpeed / 10), m_TurnSpeed(turnSpeed / 10),
+		m_ProjectionMatrix(glm::perspective(glm::radians(FoV), (float)1280 / (float)720, nearPlane, farPlane)), 
+		m_Window(window)
 {
-}
-
-Camera::~Camera()
-{
-}
-
-const glm::mat4 Camera::GetOrientation()
-{
-	glm::mat4 orientation = glm::rotate(glm::mat4(1.0f), glm::radians(m_HorizontalAngleInDegrees), glm::vec3(1, 0, 0));
-	orientation = glm::rotate(orientation, glm::radians(m_VerticalAngleInDegrees), glm::vec3(0, 1, 0));
-	return orientation;
+	glfwSetScrollCallback(window, scroll_callback);
 }
 
 void Camera::Update()
-{
+{	
 	if (m_InputManager->KeyPressed(GLFW_KEY_W)) {
-		glm::vec3 displacement = Forward() * m_MoveSpeed;
+		glm::vec3 displacement = m_Forward * m_MoveSpeed;
 		m_Position += displacement;
 	}
 	if (m_InputManager->KeyPressed(GLFW_KEY_S)) {
-		glm::vec3 displacement = Forward() * m_MoveSpeed;
+		glm::vec3 displacement = m_Forward * m_MoveSpeed;
 		m_Position -= displacement;
 	}
 	if (m_InputManager->KeyPressed(GLFW_KEY_D)) {
-		glm::vec3 displacement = Right() * m_MoveSpeed;
+		glm::vec3 displacement = m_Right * m_MoveSpeed;
 		m_Position += displacement;
 	}
 	if (m_InputManager->KeyPressed(GLFW_KEY_A)) {
-		glm::vec3 displacement = Right() * m_MoveSpeed;
+		glm::vec3 displacement = m_Right * m_MoveSpeed;
 		m_Position -= displacement;
 	}
 	if (m_InputManager->KeyPressed(GLFW_KEY_SPACE)) {
-		glm::vec3 displacement = Up() * m_MoveSpeed;
+		glm::vec3 displacement = m_Up * m_MoveSpeed;
 		m_Position += displacement;
 	}
 	if (m_InputManager->KeyPressed(GLFW_KEY_LEFT_CONTROL)) {
-		glm::vec3 displacement = Up() * m_MoveSpeed;
+		glm::vec3 displacement = m_Up * m_MoveSpeed;
 		m_Position -= displacement;
 	}
 
 	glm::vec2 mousePosition = m_InputManager->GetMousePosition();
 
-	if (m_InputManager->MouseClicked(GLFW_MOUSE_BUTTON_LEFT)) {
-		if (isMouseDown) {
-			m_HorizontalAngleInDegrees -= m_TurnSpeed * float(mouseClickposY - mousePosition.y);
-			m_VerticalAngleInDegrees -= m_TurnSpeed * float(mouseClickposX - mousePosition.x);
+	if (m_InputManager->MouseClicked(GLFW_MOUSE_BUTTON_MIDDLE)) {
+		if (isMiddleMouseDown) {
+			float deltaY = -float(mouseClickposY - mousePosition.y);
+			float deltaX = float(mouseClickposX - mousePosition.x);
+
+			glm::vec3 originToCamera = m_Position - glm::vec3(0.0);
+			glm::mat4 rotY = glm::rotate(m_TurnSpeed / 15 * deltaY, m_Right);
+			glm::mat4 rotX = glm::rotate(m_TurnSpeed / 15 * deltaX, m_Up);
+			originToCamera = rotY * rotX * glm::vec4(originToCamera, 0.0);
+			m_Position = originToCamera;
+			m_Right = glm::normalize(glm::cross(glm::normalize(originToCamera), glm::vec3(0.0, 1.0, 0.0)));
+			m_Up = glm::normalize(-glm::cross(glm::normalize(originToCamera), m_Right));
+			m_Forward = glm::normalize(glm::cross(m_Right, m_Up));
 
 			mouseClickposX = mousePosition.x;
 			mouseClickposY = mousePosition.y;
@@ -63,31 +64,17 @@ void Camera::Update()
 		else {
 			mouseClickposX = mousePosition.x;
 			mouseClickposY = mousePosition.y;
-			isMouseDown = true;
+			isMiddleMouseDown = true;
 		}
 	}
 
-	if (m_InputManager->MouseReleased(GLFW_MOUSE_BUTTON_LEFT)) {
-		isMouseDown = false;
+	if (m_InputManager->MouseReleased(GLFW_MOUSE_BUTTON_MIDDLE)) {
+		isMiddleMouseDown = false;
 	}
 }
 
 glm::mat4 Camera::GetViewMatrix()
 {
-	return glm::translate(GetOrientation(), -m_Position);
+	return glm::lookAt(m_Position, glm::vec3(0.0, 0.0, 0.0), m_Up);
 }
 
-glm::vec3 Camera::Up()
-{
-	return glm::inverse(GetOrientation()) * glm::vec4(0, 1, 0, 1);
-}
-
-glm::vec3 Camera::Right()
-{
-	return glm::inverse(GetOrientation()) * glm::vec4(1, 0, 0, 1);
-}
-
-glm::vec3 Camera::Forward()
-{
-	return glm::inverse(GetOrientation()) * glm::vec4(0, 0, -1, 1);
-}
