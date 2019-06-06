@@ -17,31 +17,6 @@ Camera::Camera(InputManager* inputManager, float moveSpeed, float turnSpeed, flo
 
 void Camera::Update()
 {	
-	if (m_InputManager->KeyPressed(GLFW_KEY_W)) {
-		glm::vec3 displacement = m_Forward * m_MoveSpeed;
-		m_Position += displacement;
-	}
-	if (m_InputManager->KeyPressed(GLFW_KEY_S)) {
-		glm::vec3 displacement = m_Forward * m_MoveSpeed;
-		m_Position -= displacement;
-	}
-	if (m_InputManager->KeyPressed(GLFW_KEY_D)) {
-		glm::vec3 displacement = m_Right * m_MoveSpeed;
-		m_Position += displacement;
-	}
-	if (m_InputManager->KeyPressed(GLFW_KEY_A)) {
-		glm::vec3 displacement = m_Right * m_MoveSpeed;
-		m_Position -= displacement;
-	}
-	if (m_InputManager->KeyPressed(GLFW_KEY_SPACE)) {
-		glm::vec3 displacement = m_Up * m_MoveSpeed;
-		m_Position += displacement;
-	}
-	if (m_InputManager->KeyPressed(GLFW_KEY_LEFT_CONTROL)) {
-		glm::vec3 displacement = m_Up * m_MoveSpeed;
-		m_Position -= displacement;
-	}
-
 	glm::vec2 mousePosition = m_InputManager->GetMousePosition();
 
 	if (m_InputManager->MouseClicked(GLFW_MOUSE_BUTTON_MIDDLE)) {

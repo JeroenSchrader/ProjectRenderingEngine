@@ -11,14 +11,14 @@ private:
 
 	InputManager* m_InputManager;
 	GLFWwindow* m_Window;
-	glm::vec3 m_Position = glm::vec3(0.0f, 8.0f, 8.0f);
+	glm::vec3 m_Position = glm::vec3(0.0f, 15.0f, 15.0f);
 	glm::mat4 m_ProjectionMatrix;
 	float m_Pitch = 0.0f;
 	float m_Yaw = 0.0f;
 	float m_MoveSpeed = 1.0f;
 	float m_ScrollSpeed = 1.5f;
 	float m_TurnSpeed = 1.0f;
-	int m_MaxZoomSteps = 7;
+	int m_MaxZoomSteps = 13;
 	int m_CurrentZoomSteps = 0;
 
 	glm::vec3 m_Right = glm::cross(glm::normalize(m_Position - glm::vec3(0.0)), glm::vec3(0.0, 1.0, 0.0));

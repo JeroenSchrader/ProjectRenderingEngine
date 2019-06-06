@@ -43,7 +43,7 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 	VertexBufferLayout layout;
 	layout.Push<float>(3);		//Positions,	location 0
 	if (format.HasTextures) {
-		layout.Push<float>(2);	//UV's,			location 1
+		layout.Push<float>(2);	//UV/Textures,	location 1
 		layout.Push<float>(3);	//Tangents,		location 3 (! Normals are loaded first in the ObjLoader)
 		layout.Push<float>(3);	//Bitangents,	location 4 (! Normals are loaded first in the ObjLoader)
 	}
@@ -69,5 +69,4 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 	Entity* entity = new Entity(name, mesh, material, textureMap, normalMap, position, rotation, scale);
 	m_Entities[name] = entity;
 }
-
 

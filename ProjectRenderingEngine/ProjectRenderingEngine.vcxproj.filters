@@ -161,5 +161,6 @@
     <None Include="src\Shaders\BasicShader.glsl" />
     <None Include="src\Shaders\BasicLightingShaderNoTexture.glsl" />
     <None Include="src\Shaders\LightSourceShader.glsl" />
+    <None Include="src\Shaders\TestShader.glsl" />
   </ItemGroup>
 </Project>

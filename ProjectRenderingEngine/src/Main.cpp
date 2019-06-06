@@ -32,8 +32,8 @@ int main() {
 	resourceManager->LoadModel("Cube2", "res/models/Crate1.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 4, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Wheel1", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Wheel2", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/GroundTexture.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, -2, 0), glm::vec3(0, 90, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 2, 7), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Ground", "res/models/GroundTexture.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
 	LightingInformation lightInformation;
 	lightInformation.AmbientColor = glm::vec3(1.0, 1.0, 1.0);
@@ -41,7 +41,10 @@ int main() {
 	lightInformation.DiffuseColor = glm::vec3(1.0, 1.0, 1.0);
 	lightInformation.DiffuseStrength = 1.0;
 	lightInformation.SpecularColor = glm::vec3(1.0, 1.0, 1.0);
-	lightInformation.SpecularStrength = 0.0;
+	lightInformation.SpecularStrength = 1.0;
+
+	Entity* light = resourceManager->GetEntityByName("Light");
+	gui.AddFloat3("Light Position", &light->GetPosition().x, -15.0f, 15.0f);
 
 	/* Loop until the user closes the window or presses the Escape key */
 	while (!inputManager->KeyPressed(GLFW_KEY_ESCAPE) && !displayManager->ShouldWindowClose())
@@ -55,10 +58,7 @@ int main() {
 		glm::vec3 cameraPosition = camera->GetPosition();
 		lightInformation.CameraPosition = cameraPosition;
 
-		//Rotate light around the world
-		Entity* light = resourceManager->GetEntityByName("Light");
-		light->GetPosition().x = 1.0f + sin(glfwGetTime() * .3) * 20.0f;
-		light->GetPosition().z = -cos(glfwGetTime() * .3) * 20.0f;
+		//Set new light position
 		lightInformation.Position = light->GetPosition();
 
 		for(const auto& entity : resourceManager->GetEntities()){
