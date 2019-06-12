@@ -8,11 +8,10 @@
 #include "Texture.h"
 #include "GLM/geometric.hpp"
 
-void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat &format)
+void ObjLoader::LoadMesh(std::istream& fileStream, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat &format)
 {
-	std::ifstream fileStream(filename);
 	if (fileStream.fail()) {
-		std::cout << "Failed to open filestream for " << filename << std::endl;
+		std::cout << "Failed to open filestream" << std::endl;
 		return;
 	}
 	std::string line;
@@ -22,7 +21,7 @@ void ObjLoader::LoadMesh(const std::string& filename, std::vector<float>& vertex
 	std::vector<glm::vec3> loadedNormals;
 
 	unsigned int index = 0;
-
+	
 	while (std::getline(fileStream, line)) {
 		if (line.find("v ") != std::string::npos) {
 			std::vector<std::string> splitString = SplitLine(line);

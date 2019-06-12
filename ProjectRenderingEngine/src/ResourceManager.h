@@ -32,7 +32,7 @@ public:
 
 	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess);
 	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 color, float shininess);
-	const void LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+	Entity* LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
 	inline std::map<std::string, OpenGLMesh*> GetMeshes() const { return m_Meshes; }
 	inline std::map<std::string, Entity*> GetEntities() const { return m_Entities; }

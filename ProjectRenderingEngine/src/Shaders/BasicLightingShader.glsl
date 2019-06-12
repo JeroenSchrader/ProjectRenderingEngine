@@ -86,16 +86,16 @@ void main() {
 	//Diffuse
 	vec3 lightDirection = normalize(fs_in.tangentLightPos - fs_in.tangentFragPos);
 	float lightToFragAngle = max(dot(lightDirection, norm), 0.0);
-	//vec3 diffuse = u_diffuseLightStrength * u_diffuseLightColor * (lightToFragAngle * u_Material.diffuse * color);
-	vec3 diffuse = lightToFragAngle * color;
+	vec3 diffuse = u_diffuseLightStrength * u_diffuseLightColor * (lightToFragAngle * u_Material.diffuse * color);
+	//vec3 diffuse = lightToFragAngle * color;
 
 	//Specular
 	vec3 viewDirection = normalize(fs_in.tangentViewPos - fs_in.tangentFragPos);
 	vec3 reflectDirection = reflect(-lightDirection, norm);
 	vec3 halfwayDir = normalize(lightDirection + viewDirection);
 	float spec = pow(max(dot(norm, halfwayDir), 0.0), u_Material.shininess); //the higher the last value, the more reflective the surface.
-	//vec3 specular = u_specularLightStrength * u_specularLightColor * (spec * u_Material.specular);
-	vec3 specular = vec3(0.2) * spec;
+	vec3 specular = u_specularLightStrength * u_specularLightColor * (spec * u_Material.specular);
+	//vec3 specular = vec3(0.2) * spec;
 
 	vec4 finalColor = vec4(ambient + diffuse + specular, 1.0);
 

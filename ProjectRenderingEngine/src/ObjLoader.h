@@ -35,6 +35,6 @@ public:
 
 	~ObjLoader() = default;
 
-	void LoadMesh(const std::string& filename, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat& format);
+	void LoadMesh(std::istream& fileStream, std::vector<float>& vertexData, std::vector<unsigned int>& indices, ObjFileFormat& format);
 	void LoadMaterial(const std::string& filename, Material& material, Texture& textureMap, Texture& normalMap);
 };

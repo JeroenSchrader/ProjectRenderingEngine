@@ -15,6 +15,9 @@
 #include "Material.h"
 #include "Texture.h"
 
+#include <fstream>
+#include <iostream>
+
 Material* ResourceManager::LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess)
 {
 	Material* material = new Material(shaderPath, ambient, diffuse, specular, shininess);
@@ -31,14 +34,15 @@ Material* ResourceManager::LoadMaterial(std::string name, const std::string& sha
 	return material;
 }
 
-const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+Entity* ResourceManager::LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
 	std::vector<float> vertices;
 	std::vector<unsigned int> indices;
 
 	ObjFileFormat format;
 
-	loader->LoadMesh(file, vertices, indices, format);
+	std::ifstream stream(file);
+	loader->LoadMesh(stream, vertices, indices, format);
 
 	VertexBufferLayout layout;
 	layout.Push<float>(3);		//Positions,	location 0
@@ -68,5 +72,7 @@ const void ResourceManager::LoadModel(std::string name, std::string file, ObjLoa
 
 	Entity* entity = new Entity(name, mesh, material, textureMap, normalMap, position, rotation, scale);
 	m_Entities[name] = entity;
+
+	return entity;
 }
 

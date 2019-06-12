@@ -1,6 +1,7 @@
 #include "GUI.h"
 
 GUI::GUI(GLFWwindow* window)
+	: LoadModelButtonClicked(false)
 {
 	m_Context = ImGui::CreateContext();
 	ImGui::StyleColorsDark();
@@ -14,11 +15,20 @@ void GUI::OnGUIUpdate()
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 	ImGui::Begin("Controls");
-	ImGui::Button("HoiTest");
-	for (size_t i = 0; i < m_GUIItems.size(); i++)
+	if (ImGui::Button("Load Model")) {
+		LoadModelButtonClicked = true;
+	}
+	for (size_t i = 0; i < m_GUISliders.size(); i++)
 	{
-		GUIItem item = m_GUIItems[i];
-		ImGui::SliderFloat3(item.Name.c_str(), item.Value, item.MinRange, item.MaxRange);
+		GUISlider item = m_GUISliders[i];
+		switch (item.Type) {
+			case GUISliderType::Float1:
+				ImGui::SliderFloat(item.Name.c_str(), item.Value, item.MinRange, item.MaxRange);
+				break;
+			case GUISliderType::Float3:
+				ImGui::SliderFloat3(item.Name.c_str(), item.Value, item.MinRange, item.MaxRange);
+				break;
+		}
 	}
 	ImGui::End();
 	ImGui::Render();
@@ -32,7 +42,13 @@ void GUI::Cleanup()
 	ImGui::DestroyContext(m_Context);
 }
 
+void GUI::AddFloat1(std::string name, float* value, float minRange, float maxRange) {
+	m_GUISliders.push_back(GUISlider(name, GUISliderType::Float1, value, minRange, maxRange));
+}
+
 void GUI::AddFloat3(std::string name, float* value, float minRange, float maxRange)
 {
-	m_GUIItems.push_back(GUIItem(name, value, minRange, maxRange));
+	m_GUISliders.push_back(GUISlider(name, GUISliderType::Float3, value, minRange, maxRange));
 }
+
+
