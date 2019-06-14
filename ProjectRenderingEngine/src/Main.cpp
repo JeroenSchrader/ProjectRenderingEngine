@@ -33,14 +33,14 @@ int main() {
 	GUI gui(displayManager->GetWindow());
 	ResourceManager* resourceManager = resourceManager->GetInstance();
 
-	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Cube", "res/models/Crate1.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 4, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Wheel", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/GroundTexture.obj", loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube", "res/models/testCubeTexture.obj", loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Wheel", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, 2, 2), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(-8, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Ground", "res/models/BrickWall.obj", loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
 	LightingInformation lightInformation;
-	lightInformation.AmbientColor = glm::vec3(1.0, 0.0, 0.0);
-	lightInformation.AmbientStrength = 0.1;
+	lightInformation.AmbientColor = glm::vec3(1.0, 1.0, 1.0);
+	lightInformation.AmbientStrength = 0.35;
 	lightInformation.DiffuseColor = glm::vec3(1.0, 1.0, 1.0);
 	lightInformation.DiffuseStrength = 1.0;
 	lightInformation.SpecularColor = glm::vec3(1.0, 1.0, 1.0);
@@ -81,7 +81,7 @@ int main() {
 			if (dialog.Open() != -1) {
 				std::string fileName = dialog.GetFileName();
 				//Remove .obj from fileName
-				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, "src/Shaders/BasicLightingShader.glsl", glm::vec3(0, 9, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, 9, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 				gui.AddFloat3(loadedModel->GetName(), &loadedModel->GetPosition().x, -MaxEntityRange, MaxEntityRange);
 			}
 			else {

@@ -21,6 +21,7 @@ void Texture::LoadNewTexture(std::string file, TextureTypes type)
 	m_TextureType = type;
 
 	stbi_set_flip_vertically_on_load(true);
+
 	unsigned char* data = stbi_load(file.c_str(), &m_Width, &m_Height, &m_NrOfChannels, 0);
 	if (data) {
 

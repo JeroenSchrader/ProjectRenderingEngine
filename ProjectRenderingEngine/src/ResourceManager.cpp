@@ -54,7 +54,34 @@ Entity* ResourceManager::LoadModel(std::string name, std::string file, ObjLoader
 	layout.Push<float>(3);		//Normals,		location 2
 
 	OpenGLMesh* mesh = new OpenGLMesh();
-	m_Meshes[name] = mesh;
+
+	int lastEntity = -1;
+	std::string newName = name;
+
+	for (auto const& element : m_Meshes)
+	{
+		//Check all mesh names. If one with the same name exists create one with 1, 2, 3 etc.. at the end
+		//Example: if Tree1 exists, create a new one with name Tree1_1. And Tree1_2 afterwards
+		const std::string key = element.first;
+		if (key.find(name) == std::string::npos) {
+			continue;
+		}
+		std::string substr = key.substr(key.size() - 2, 2);
+		if (substr.find("_") != std::string::npos) {
+			int entityNr = std::stoi(substr.substr(1, 1));
+			if (entityNr > lastEntity) {
+				lastEntity = entityNr;
+			}
+		}
+		else {
+			newName += "_" + std::to_string(1);
+		}
+	}
+	if (lastEntity != -1) {
+		newName = newName.replace(newName.size() - 1, 1, std::to_string(lastEntity + 1));
+	}
+
+	m_Meshes[newName] = mesh;
 
 	mesh->GetVertices() = vertices;
 	mesh->GetIndices() = indices;
@@ -62,16 +89,16 @@ Entity* ResourceManager::LoadModel(std::string name, std::string file, ObjLoader
 	mesh->CreateOpenGLData();
 
 	Texture* textureMap = new Texture();
-	m_TextureMaps[name] = textureMap;
+	m_TextureMaps[newName] = textureMap;
 
 	Texture* normalMap = new Texture();
-	m_NormalMaps[name] = normalMap;
+	m_NormalMaps[newName] = normalMap;
 
-	Material* material = LoadMaterial(name, shaderPath, glm::vec3(1.0,1.0,1.0), 128);
+	Material* material = LoadMaterial(newName, shaderPath, glm::vec3(1.0,1.0,1.0), 128);
 	loader->LoadMaterial(file.replace(file.end()-4, file.end(), ".mtl"), *material, *textureMap, *normalMap);
 
-	Entity* entity = new Entity(name, mesh, material, textureMap, normalMap, position, rotation, scale);
-	m_Entities[name] = entity;
+	Entity* entity = new Entity(newName, mesh, material, textureMap, normalMap, position, rotation, scale);
+	m_Entities[newName] = entity;
 
 	return entity;
 }

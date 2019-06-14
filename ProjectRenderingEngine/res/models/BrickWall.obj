@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib Grind.mtl
+mtllib BrickWall.mtl
 o Cube.002
 v -20.000000 0.200003 -20.000000
 v 20.000000 0.200003 -20.000000
