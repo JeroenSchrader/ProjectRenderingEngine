@@ -15,6 +15,9 @@
 #include "Material.h"
 #include "Texture.h"
 
+#include "Cubemap.h"
+#include "Skybox.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -101,5 +104,30 @@ Entity* ResourceManager::LoadModel(std::string name, std::string file, ObjLoader
 	m_Entities[newName] = entity;
 
 	return entity;
+}
+
+Skybox* ResourceManager::LoadSkybox(std::string name, std::string filePath)
+{
+	Cubemap* cubemap = new Cubemap(filePath);
+	m_Cubemaps[name] = cubemap;
+
+	Shader* shader = new Shader("src/Shaders/Effects/SkyboxShader.glsl");
+	m_Shaders[name] = shader;
+
+	VertexBufferLayout layout;
+	layout.Push<float>(3);		//Positions,	location 0
+
+	OpenGLMesh* mesh = new OpenGLMesh();
+	m_Meshes[name] = mesh;
+
+	mesh->GetVertices() = skyboxVertices;
+	mesh->GetIndices() = skyboxIndices;
+	mesh->GetLayout() = layout;
+	mesh->CreateOpenGLData();
+
+	Skybox* skybox = new Skybox(cubemap, shader, mesh);
+	m_Skyboxes[name] = skybox;
+
+	return skybox;
 }
 

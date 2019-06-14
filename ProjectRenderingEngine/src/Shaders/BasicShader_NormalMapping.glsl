@@ -36,8 +36,9 @@ void main() {
     mat3 normalMatrix = transpose(inverse(mat3(u_transformationMatrix)));
     vec3 T = normalize(normalMatrix * aTangent);
     vec3 N = normalize(normalMatrix * aNormal);
-    T = normalize(T - dot(T, N) * N);
-    vec3 B = cross(N, T);
+	T = normalize(T - dot(T, N) * N);
+    vec3 B = cross(T, N);
+
 	mat3 TBN = transpose(mat3(T, B, N));
 
 	vs_out.lightPos = u_lightPosition;
@@ -45,8 +46,8 @@ void main() {
 
 	vs_out.tangentLightPos = TBN * u_lightPosition;
 	vs_out.tangentViewPos = TBN * u_cameraPosition;
-	vs_out.tangentFragPos = TBN * vs_out.fragmentPosition;
-	vs_out.normal = aNormal;
+	vs_out.tangentFragPos = TBN * vec3(u_transformationMatrix * vec4(aPosition, 0.0));
+	vs_out.normal = normalMatrix * aNormal;
 }
 
 #shader fragment
@@ -82,30 +83,31 @@ uniform float u_specularLightStrength;
 uniform Material u_Material;
 
 uniform sampler2D u_TextureMap;
-//uniform sampler2D u_NormalMap;
+uniform sampler2D u_NormalMap;
 
 void main() {
-	//Ambient
+	//Get texture from texture map
 	vec3 texColor = texture(u_TextureMap, fs_in.uv).rgb;
+	
+	//Get normal from normal map
+	vec3 norm = texture(u_NormalMap, fs_in.uv).rgb;
+	norm = normalize(norm * 2.0 - 1.0);
 
+	//Ambient
 	vec3 ambient = u_ambientLightStrength * (texColor * u_ambientLightColor * u_Material.ambient);
 
-	//vec3 norm = texture(u_NormalMap, fs_in.uv).rgb;
-	//norm = normalize(norm * 2.0 - 1.0);
-
-	vec3 norm = normalize(fs_in.normal);
 	//Diffuse
-	vec3 lightDirection = normalize(fs_in.lightPos - fs_in.fragmentPosition); //Use fs_in.tangent.. for tangent space normal calculations
-	float lightToFragAngle = max(dot(norm, lightDirection), 0.0);
+	vec3 lightDirection = normalize(fs_in.tangentLightPos - fs_in.tangentFragPos); 
+	float lightToFragAngle = max(dot(lightDirection, norm), 0.0);
 	vec3 diffuse = u_diffuseLightStrength * u_diffuseLightColor * (texColor * lightToFragAngle * u_Material.diffuse);
 
 	//Specular
-	vec3 viewDirection = normalize(fs_in.viewPos - fs_in.fragmentPosition); //Use fs_in.tangent.. for tangent space normal calculations
+	vec3 viewDirection = normalize(fs_in.tangentViewPos  - fs_in.tangentFragPos);
 	vec3 reflectDirection = reflect(-lightDirection, norm);
 	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), u_Material.shininess); //the higher the last value, the more reflective the surface.
 	vec3 specular = u_specularLightColor * u_specularLightStrength * (spec * u_Material.specular);
 
+	//Final Pixel Color
 	vec3 finalColor = (ambient + diffuse + specular) * fs_in.fragmentColor;
-
 	color = vec4(finalColor, 0.0);
 }

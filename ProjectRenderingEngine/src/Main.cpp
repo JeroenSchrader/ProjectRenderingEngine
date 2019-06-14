@@ -11,6 +11,7 @@
 
 #include "OpenGLMesh.h"
 #include "Entity.h"
+#include "Skybox.h"
 
 //Initialize singletons
 DisplayManager* DisplayManager::m_Instance = 0;
@@ -20,8 +21,11 @@ ResourceManager* ResourceManager::m_Instance = 0;
 Camera* Camera::m_Instance = 0;
 ObjLoader* ObjLoader::m_Instance = 0;
 
-const float MaxEntityRange = 15.0f;
+const float MaxEntityPosition = 15.0f;
+const float MaxEntityRotation = 360.0f;
 const float MaxRGBColorRange = 1.0f;
+std::string CurrentShader = "BasicShader.glsl";
+//std::string CurrentShader = "BasicShader_NormalMapping.glsl";
 
 int main() {	
 	// !! Create in this order !!
@@ -33,10 +37,10 @@ int main() {
 	GUI gui(displayManager->GetWindow());
 	ResourceManager* resourceManager = resourceManager->GetInstance();
 
-	resourceManager->LoadModel("Cube", "res/models/testCubeTexture.obj", loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Wheel", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, 2, 2), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Cube", "res/models/testCubeTexture.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Wheel", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 2, 2), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(-8, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/BrickWall.obj", loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Ground", "res/models/BrickWall.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 
 	LightingInformation lightInformation;
 	lightInformation.AmbientColor = glm::vec3(1.0, 1.0, 1.0);
@@ -57,10 +61,12 @@ int main() {
 	for (std::map<std::string, Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
 		//Add all GUI items for each entity in the world
-		gui.AddFloat3(it->first, &it->second->GetPosition().x, -MaxEntityRange, MaxEntityRange);
+		gui.AddFloat3(it->first, &it->second->GetPosition().x, -MaxEntityPosition, MaxEntityPosition);
+		gui.AddFloat3(it->first + " Rotation", &it->second->GetRotation().x, 0, MaxEntityRotation);
 	}
 
 	Entity* light = entities["Light"];
+	Skybox* skybox = resourceManager->LoadSkybox("Ocean", "res/cubemaps/ocean");
 
 	while (!inputManager->KeyPressed(GLFW_KEY_ESCAPE) && !displayManager->ShouldWindowClose())
 	{
@@ -81,14 +87,19 @@ int main() {
 			if (dialog.Open() != -1) {
 				std::string fileName = dialog.GetFileName();
 				//Remove .obj from fileName
-				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, "src/Shaders/BasicShaderNoNormalMapping.glsl", glm::vec3(0, 9, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-				gui.AddFloat3(loadedModel->GetName(), &loadedModel->GetPosition().x, -MaxEntityRange, MaxEntityRange);
+				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+				gui.AddFloat3(loadedModel->GetName(), &loadedModel->GetPosition().x, -MaxEntityPosition, MaxEntityPosition);
+				gui.AddFloat3(loadedModel->GetName() + " Rotation", &loadedModel->GetRotation().x, 0, MaxEntityRotation);
 			}
 			else {
 				std::cout << dialog.GetErrorMessage() << std::endl;
 			}
 			gui.LoadModelButtonClicked = false;
 		}
+
+		skybox->Bind(projectionMatrix, viewMatrix);
+		renderer->Draw(skyboxIndices.size());
+		glDepthFunc(GL_LESS);
 
 		for(const auto& entity : resourceManager->GetEntities()){
 			//Render each entity in the world

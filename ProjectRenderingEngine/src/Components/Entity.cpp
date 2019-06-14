@@ -9,7 +9,7 @@
 #include "Texture.h"
 
 Entity::Entity(std::string& name, OpenGLMesh* mesh, Material* material, Texture* textureMap, Texture* normalMap, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
-	: m_Name(name), m_Mesh(mesh), m_Material(material), m_TextureMap(textureMap), m_NormalMap(normalMap), m_Position(position), m_RotationXInDegrees(rotations.x), m_RotationYInDegrees(rotations.y), m_RotationZInDegrees(rotations.z), m_Scale(scale)
+	: m_Name(name), m_Mesh(mesh), m_Material(material), m_TextureMap(textureMap), m_NormalMap(normalMap), m_Position(position), m_Rotation(rotations), m_Scale(scale)
 {
 }
 
@@ -23,9 +23,9 @@ glm::mat4 Entity::GetTransformationMatrix()
 {
 	glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), m_Position);
 	glm::mat4 scaleMatrix = glm::scale(m_Scale);
-	glm::mat4 rotationX = glm::rotate(glm::radians(m_RotationXInDegrees), glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 rotationY = glm::rotate(glm::radians(m_RotationYInDegrees), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 rotationZ = glm::rotate(glm::radians(m_RotationZInDegrees), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 rotationX = glm::rotate(glm::radians(m_Rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 rotationY = glm::rotate(glm::radians(m_Rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 rotationZ = glm::rotate(glm::radians(m_Rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	glm::mat4 rotationMatrix = rotationX * rotationY * rotationZ;
 	glm::mat4 transformationMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 

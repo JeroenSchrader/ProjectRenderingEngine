@@ -81,7 +81,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src/vendor;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src/vendor;src/OpenGL_Core;src/Components;src/Effects;src/Managers;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -95,7 +95,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src/vendor;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src/vendor;src/OpenGL_Core;src/Components;src/Effects;src/Managers;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -111,7 +111,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src/vendor;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src/vendor;src/OpenGL_Core;src/Components;src/Effects;src/Managers;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -129,7 +129,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src/vendor;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src/vendor;src/OpenGL_Core;src/Components;src/Effects;src/Managers;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\GLFW\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -140,45 +140,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\DisplayManager.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\FileDialog.cpp" />
-    <ClCompile Include="src\GUI.cpp" />
-    <ClCompile Include="src\IndexBuffer.cpp" />
-    <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="src\Components\Camera.cpp" />
+    <ClCompile Include="src\Effects\Cubemap.cpp" />
+    <ClCompile Include="src\Effects\Skybox.cpp" />
+    <ClCompile Include="src\Managers\DisplayManager.cpp" />
+    <ClCompile Include="src\Components\Entity.cpp" />
+    <ClCompile Include="src\Components\FileDialog.cpp" />
+    <ClCompile Include="src\Components\GUI.cpp" />
+    <ClCompile Include="src\OpenGL_Core\IndexBuffer.cpp" />
+    <ClCompile Include="src\Managers\InputManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Material.cpp" />
-    <ClCompile Include="src\ObjLoader.cpp" />
-    <ClCompile Include="src\OpenGLMesh.cpp" />
-    <ClCompile Include="src\Renderer.cpp" />
-    <ClCompile Include="src\ResourceManager.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Components\Material.cpp" />
+    <ClCompile Include="src\Components\ObjLoader.cpp" />
+    <ClCompile Include="src\OpenGL_Core\OpenGLMesh.cpp" />
+    <ClCompile Include="src\OpenGL_Core\Renderer.cpp" />
+    <ClCompile Include="src\Managers\ResourceManager.cpp" />
+    <ClCompile Include="src\OpenGL_Core\Shader.cpp" />
+    <ClCompile Include="src\OpenGL_Core\Texture.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\VertexArray.cpp" />
-    <ClCompile Include="src\VertexBuffer.cpp" />
+    <ClCompile Include="src\OpenGL_Core\VertexArray.cpp" />
+    <ClCompile Include="src\OpenGL_Core\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Camera.h" />
-    <ClInclude Include="src\DisplayManager.h" />
-    <ClInclude Include="src\Entity.h" />
-    <ClInclude Include="src\FileDialog.h" />
-    <ClInclude Include="src\GUI.h" />
-    <ClInclude Include="src\IndexBuffer.h" />
-    <ClInclude Include="src\InputManager.h" />
-    <ClInclude Include="src\Material.h" />
-    <ClInclude Include="src\Mesh.h" />
-    <ClInclude Include="src\ObjLoader.h" />
-    <ClInclude Include="src\OpenGLMesh.h" />
-    <ClInclude Include="src\Renderer.h" />
-    <ClInclude Include="src\ResourceManager.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\Texture.h" />
+    <ClInclude Include="src\Components\Camera.h" />
+    <ClInclude Include="src\Effects\Cubemap.h" />
+    <ClInclude Include="src\Effects\Skybox.h" />
+    <ClInclude Include="src\Managers\DisplayManager.h" />
+    <ClInclude Include="src\Components\Entity.h" />
+    <ClInclude Include="src\Components\FileDialog.h" />
+    <ClInclude Include="src\Components\GUI.h" />
+    <ClInclude Include="src\OpenGL_Core\IndexBuffer.h" />
+    <ClInclude Include="src\Managers\InputManager.h" />
+    <ClInclude Include="src\Components\Material.h" />
+    <ClInclude Include="src\Components\Mesh.h" />
+    <ClInclude Include="src\Components\ObjLoader.h" />
+    <ClInclude Include="src\OpenGL_Core\OpenGLMesh.h" />
+    <ClInclude Include="src\OpenGL_Core\Renderer.h" />
+    <ClInclude Include="src\Managers\ResourceManager.h" />
+    <ClInclude Include="src\OpenGL_Core\Shader.h" />
+    <ClInclude Include="src\OpenGL_Core\Texture.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
     <ClInclude Include="src\vendor\imgui\imgui.h" />
     <ClInclude Include="src\vendor\imgui\imgui_impl_glfw.h" />
@@ -187,16 +191,15 @@
     <ClInclude Include="src\vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
-    <ClInclude Include="src\VertexArray.h" />
-    <ClInclude Include="src\VertexBuffer.h" />
-    <ClInclude Include="src\VertexBufferLayout.h" />
+    <ClInclude Include="src\OpenGL_Core\VertexArray.h" />
+    <ClInclude Include="src\OpenGL_Core\VertexBuffer.h" />
+    <ClInclude Include="src\OpenGL_Core\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Shaders\BasicLightingShader.glsl" />
-    <None Include="src\Shaders\BasicLightingShaderNoTexture.glsl" />
     <None Include="src\Shaders\BasicShader.glsl" />
+    <None Include="src\Shaders\Effects\SkyboxShader.glsl" />
     <None Include="src\Shaders\LightSourceShader.glsl" />
-    <None Include="src\Shaders\BasicShaderNoNormalMapping.glsl" />
+    <None Include="src\Shaders\BasicShader_NormalMapping.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -31,9 +31,7 @@ private:
 	Texture* m_NormalMap;
 
 	glm::vec3 m_Position;
-	float m_RotationXInDegrees;
-	float m_RotationYInDegrees;
-	float m_RotationZInDegrees;
+	glm::vec3 m_Rotation;
 	glm::vec3 m_Scale;
 
 public:
@@ -49,6 +47,8 @@ public:
 	const void SetLightingInformation(LightingInformation& information);
 
 	inline glm::vec3& GetPosition() { return m_Position; }
+	inline glm::vec3& GetRotation() { return m_Rotation; }
+	inline glm::vec3& GetScale() { return m_Scale; }
 	inline std::string& GetName() { return m_Name; }
 
 	inline OpenGLMesh* GetMesh() const { return m_Mesh; }
