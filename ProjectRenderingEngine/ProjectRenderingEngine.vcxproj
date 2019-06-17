@@ -200,6 +200,7 @@
     <None Include="src\Shaders\Effects\SkyboxShader.glsl" />
     <None Include="src\Shaders\LightSourceShader.glsl" />
     <None Include="src\Shaders\BasicShader_NormalMapping.glsl" />
+    <None Include="src\Shaders\MirrorShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

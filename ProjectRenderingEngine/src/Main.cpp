@@ -25,6 +25,7 @@ const float MaxEntityPosition = 15.0f;
 const float MaxEntityRotation = 360.0f;
 const float MaxRGBColorRange = 1.0f;
 std::string CurrentShader = "BasicShader.glsl";
+const std::string MirrorShader = "MirrorShader.glsl";
 //std::string CurrentShader = "BasicShader_NormalMapping.glsl";
 
 int main() {	
@@ -38,6 +39,7 @@ int main() {
 	ResourceManager* resourceManager = resourceManager->GetInstance();
 
 	resourceManager->LoadModel("Cube", "res/models/testCubeTexture.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Mirror", "res/models/Mirror.obj", loader, "src/Shaders/" + MirrorShader, glm::vec3(15, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 3, 3));
 	resourceManager->LoadModel("Wheel", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 2, 2), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(-8, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	resourceManager->LoadModel("Ground", "res/models/BrickWall.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
@@ -87,7 +89,8 @@ int main() {
 			if (dialog.Open() != -1) {
 				std::string fileName = dialog.GetFileName();
 				//Remove .obj from fileName
-				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+				bool isMirrorObject = fileName.find("Mirror") != std::string::npos;
+				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, isMirrorObject ? "src/Shaders/" + MirrorShader : "src/Shaders/" + CurrentShader, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), isMirrorObject ? glm::vec3(1, 3, 3) : glm::vec3(1,1,1));
 				gui.AddFloat3(loadedModel->GetName(), &loadedModel->GetPosition().x, -MaxEntityPosition, MaxEntityPosition);
 				gui.AddFloat3(loadedModel->GetName() + " Rotation", &loadedModel->GetRotation().x, 0, MaxEntityRotation);
 			}
