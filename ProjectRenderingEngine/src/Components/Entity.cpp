@@ -8,6 +8,8 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "LightingInformation.h"
+
 Entity::Entity(std::string& name, OpenGLMesh* mesh, Material* material, Texture* textureMap, Texture* normalMap, glm::vec3 position, glm::vec3 rotations, glm::vec3 scale)
 	: m_Name(name), m_Mesh(mesh), m_Material(material), m_TextureMap(textureMap), m_NormalMap(normalMap), m_Position(position), m_Rotation(rotations), m_Scale(scale)
 {

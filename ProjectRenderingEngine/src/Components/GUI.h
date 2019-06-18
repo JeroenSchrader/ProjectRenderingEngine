@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+class Scene;
+class Entity;
+
 enum GUISliderType {
 	Float1,
 	Float3
@@ -32,14 +35,19 @@ private:
 	ImGuiContext* m_Context;
 	std::vector<GUISlider> m_GUISliders;
 
+	void AddFloat1(std::string name, float* value, float minRange, float maxRange);
+	void AddFloat3(std::string name, float* value, float minRange, float maxRange);
+
 public:
 	GUI(GLFWwindow* window);
 	~GUI() = default;
 
+	void InitializeSceneGUI(Scene* scene);
+	void AddEntityToGUI(Entity* entity);
+
 	void OnGUIUpdate();
 	void Cleanup();
-	void AddFloat1(std::string name, float* value, float minRange, float maxRange);
-	void AddFloat3(std::string name, float* value, float minRange, float maxRange);
 
 	bool LoadModelButtonClicked;
+	bool LoadNextSceneButtonClicked;
 };

@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "Camera.h"
 #include "ResourceManager.h"
+#include "SceneManager.h"
 #include "ObjLoader.h"
 #include "GUI.h"
 #include "FileDialog.h"
@@ -12,18 +13,16 @@
 #include "OpenGLMesh.h"
 #include "Entity.h"
 #include "Skybox.h"
+#include "Scene.h"
 
 //Initialize singletons
 DisplayManager* DisplayManager::m_Instance = 0;
 InputManager* InputManager::m_Instance = 0;
 Renderer* Renderer::m_Instance = 0; 
-ResourceManager* ResourceManager::m_Instance = 0; 
 Camera* Camera::m_Instance = 0;
 ObjLoader* ObjLoader::m_Instance = 0;
+SceneManager* SceneManager::m_Instance = 0;
 
-const float MaxEntityPosition = 15.0f;
-const float MaxEntityRotation = 360.0f;
-const float MaxRGBColorRange = 1.0f;
 std::string CurrentShader = "BasicShader.glsl";
 const std::string MirrorShader = "MirrorShader.glsl";
 //std::string CurrentShader = "BasicShader_NormalMapping.glsl";
@@ -36,39 +35,15 @@ int main() {
 	Camera* camera = Camera::GetInstance();
 	ObjLoader* loader = ObjLoader::GetInstance();
 	GUI gui(displayManager->GetWindow());
-	ResourceManager* resourceManager = resourceManager->GetInstance();
+	SceneManager* sceneManager = SceneManager::GetInstance();
 
-	resourceManager->LoadModel("Cube", "res/models/testCubeTexture.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Mirror", "res/models/Mirror.obj", loader, "src/Shaders/" + MirrorShader, glm::vec3(15, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 3, 3));
-	resourceManager->LoadModel("Wheel", "res/models/PorscheWheelNormal.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, 2, 2), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(-8, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/BrickWall.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	Scene* currentScene = sceneManager->GetCurrentScene();
+	LightingInformation* lightInformation = currentScene->m_LightInformation;
+	ResourceManager* resourceManager = currentScene->m_ResourceManager;
+	Skybox* skybox = currentScene->m_Skybox;
+	Entity* light = resourceManager->GetEntities()["Light"];
 
-	LightingInformation lightInformation;
-	lightInformation.AmbientColor = glm::vec3(1.0, 1.0, 1.0);
-	lightInformation.AmbientStrength = 0.35;
-	lightInformation.DiffuseColor = glm::vec3(1.0, 1.0, 1.0);
-	lightInformation.DiffuseStrength = 1.0;
-	lightInformation.SpecularColor = glm::vec3(1.0, 1.0, 1.0);
-	lightInformation.SpecularStrength = 1.0;
-
-	gui.AddFloat3("Ambient Light Color", &lightInformation.AmbientColor.x, 0, MaxRGBColorRange);
-	gui.AddFloat1("Ambient Light Strength", &lightInformation.AmbientStrength, 0, MaxRGBColorRange);
-	gui.AddFloat3("Diffuse Light Color", &lightInformation.DiffuseColor.x, 0, MaxRGBColorRange);
-	gui.AddFloat1("Diffuse Light Strength", &lightInformation.DiffuseStrength, 0, MaxRGBColorRange);
-	gui.AddFloat3("Specular Light Color", &lightInformation.SpecularColor.x, 0, MaxRGBColorRange);
-	gui.AddFloat1("Specular Light Strength", &lightInformation.SpecularStrength, 0, MaxRGBColorRange);
-
-	std::map<std::string, Entity*> entities = resourceManager->GetEntities();
-	for (std::map<std::string, Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
-	{
-		//Add all GUI items for each entity in the world
-		gui.AddFloat3(it->first, &it->second->GetPosition().x, -MaxEntityPosition, MaxEntityPosition);
-		gui.AddFloat3(it->first + " Rotation", &it->second->GetRotation().x, 0, MaxEntityRotation);
-	}
-
-	Entity* light = entities["Light"];
-	Skybox* skybox = resourceManager->LoadSkybox("Ocean", "res/cubemaps/ocean");
+	gui.InitializeSceneGUI(currentScene);
 
 	while (!inputManager->KeyPressed(GLFW_KEY_ESCAPE) && !displayManager->ShouldWindowClose())
 	{
@@ -79,8 +54,8 @@ int main() {
 		glm::mat4 projectionMatrix = camera->GetProjectionMatrix();
 		glm::mat4 viewMatrix = camera->GetViewMatrix();
 		glm::vec3 cameraPosition = camera->GetPosition();
-		lightInformation.CameraPosition = cameraPosition;
-		lightInformation.Position = light->GetPosition();
+		lightInformation->CameraPosition = cameraPosition;
+		lightInformation->Position = light->GetPosition();
 
 		if (gui.LoadModelButtonClicked) {
 			//Open windows file dialog, load model and add to GUI
@@ -91,13 +66,24 @@ int main() {
 				//Remove .obj from fileName
 				bool isMirrorObject = fileName.find("Mirror") != std::string::npos;
 				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, isMirrorObject ? "src/Shaders/" + MirrorShader : "src/Shaders/" + CurrentShader, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), isMirrorObject ? glm::vec3(1, 3, 3) : glm::vec3(1,1,1));
-				gui.AddFloat3(loadedModel->GetName(), &loadedModel->GetPosition().x, -MaxEntityPosition, MaxEntityPosition);
-				gui.AddFloat3(loadedModel->GetName() + " Rotation", &loadedModel->GetRotation().x, 0, MaxEntityRotation);
+				gui.AddEntityToGUI(loadedModel);			
 			}
 			else {
 				std::cout << dialog.GetErrorMessage() << std::endl;
 			}
 			gui.LoadModelButtonClicked = false;
+		}
+
+		if (gui.LoadNextSceneButtonClicked) {
+			//If arrow button is clicked, load next scene
+			currentScene = sceneManager->GetNextScene();
+			lightInformation = currentScene->m_LightInformation;
+			resourceManager = currentScene->m_ResourceManager;
+			skybox = currentScene->m_Skybox;
+			light = resourceManager->GetEntities()["Light"];
+
+			gui.InitializeSceneGUI(currentScene);
+			gui.LoadNextSceneButtonClicked = false;
 		}
 
 		skybox->Bind(projectionMatrix, viewMatrix);
@@ -109,7 +95,7 @@ int main() {
 			Entity* entityP = entity.second;
 			entityP->Bind();
 			if (entityP->GetName().find("Light") == std::string::npos) {
-				entityP->SetLightingInformation(lightInformation);
+				entityP->SetLightingInformation(*lightInformation);
 			}
 
 			entityP->SetProjectionMatrix(projectionMatrix);
@@ -127,6 +113,7 @@ int main() {
 	displayManager->~DisplayManager();
 	inputManager->~InputManager();
 	gui.Cleanup();
+	resourceManager->~ResourceManager();
 
 	return 0;
 }

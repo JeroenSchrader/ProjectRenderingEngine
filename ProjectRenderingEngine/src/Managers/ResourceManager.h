@@ -15,9 +15,6 @@ class Skybox;
 
 class ResourceManager {
 private:
-	static ResourceManager* m_Instance;
-	ResourceManager() = default;
-
 	std::map<std::string, OpenGLMesh*> m_Meshes;
 	std::map<std::string, Entity*> m_Entities;
 	std::map<std::string, Shader*> m_Shaders;
@@ -27,13 +24,7 @@ private:
 	std::map<std::string, Cubemap*> m_Cubemaps;
 	std::map<std::string, Skybox*> m_Skyboxes;
 public:
-	static ResourceManager* GetInstance() {
-		if (m_Instance) {
-			return m_Instance;
-		}
-		m_Instance = new ResourceManager;
-		return m_Instance;
-	}
+	ResourceManager() = default;
 	~ResourceManager() = default;
 
 	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess);

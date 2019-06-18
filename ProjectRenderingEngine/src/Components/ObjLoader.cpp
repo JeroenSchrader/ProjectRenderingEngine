@@ -137,6 +137,9 @@ void ObjLoader::LoadMaterial(const std::string& filename, Material& material, Te
 			std::vector<std::string> splitString = SplitLine(line);
 			material.GetShininess() = std::stof(splitString[0]);
 		}
+		else if (line.find("map_Ka ") != std::string::npos) {
+
+		}
 		else if (line.find("Ka ") != std::string::npos) {
 			std::vector<std::string> splitString = SplitLine(line);
 			material.GetAmbient() = glm::vec3(std::stof(splitString[0]), std::stof(splitString[1]), std::stof(splitString[2]));
