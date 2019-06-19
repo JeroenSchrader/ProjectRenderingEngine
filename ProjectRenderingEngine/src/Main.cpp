@@ -19,27 +19,31 @@
 DisplayManager* DisplayManager::m_Instance = 0;
 InputManager* InputManager::m_Instance = 0;
 Renderer* Renderer::m_Instance = 0; 
+ResourceManager* ResourceManager::m_Instance = 0;
 Camera* Camera::m_Instance = 0;
 ObjLoader* ObjLoader::m_Instance = 0;
 SceneManager* SceneManager::m_Instance = 0;
 
 std::string CurrentShader = "BasicShader.glsl";
 const std::string MirrorShader = "MirrorShader.glsl";
-//std::string CurrentShader = "BasicShader_NormalMapping.glsl";
 
 int main() {	
 	// !! Create in this order !!
 	DisplayManager* displayManager = DisplayManager::GetInstance();
 	InputManager* inputManager = InputManager::GetInstance();
 	Renderer* renderer = Renderer::GetInstance();
+	ResourceManager* resourceManager = ResourceManager::GetInstance();
 	Camera* camera = Camera::GetInstance();
 	ObjLoader* loader = ObjLoader::GetInstance();
 	GUI gui(displayManager->GetWindow());
 	SceneManager* sceneManager = SceneManager::GetInstance();
 
+	resourceManager->LoadModel("Mirror", "res/models/Mirror.obj", loader, "src/Shaders/" + MirrorShader, glm::vec3(15, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 3, 3));
+	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(-8, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	resourceManager->LoadModel("Ground", "res/models/Floor.obj", loader, "src/Shaders/" + CurrentShader, glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	
 	Scene* currentScene = sceneManager->GetCurrentScene();
 	LightingInformation* lightInformation = currentScene->m_LightInformation;
-	ResourceManager* resourceManager = currentScene->m_ResourceManager;
 	Skybox* skybox = currentScene->m_Skybox;
 	Entity* light = resourceManager->GetEntities()["Light"];
 
@@ -65,7 +69,7 @@ int main() {
 				std::string fileName = dialog.GetFileName();
 				//Remove .obj from fileName
 				bool isMirrorObject = fileName.find("Mirror") != std::string::npos;
-				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, isMirrorObject ? "src/Shaders/" + MirrorShader : "src/Shaders/" + CurrentShader, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), isMirrorObject ? glm::vec3(1, 3, 3) : glm::vec3(1,1,1));
+				Entity* loadedModel = resourceManager->LoadModel(fileName.substr(0, fileName.size() - 4), dialog.GetFullFilePath(), loader, isMirrorObject ? "src/Shaders/" + MirrorShader : "src/Shaders/" + CurrentShader, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), isMirrorObject ? glm::vec3(1, 3, 3) : glm::vec3(1, 1, 1));
 				gui.AddEntityToGUI(loadedModel);			
 			}
 			else {
@@ -75,23 +79,25 @@ int main() {
 		}
 
 		if (gui.LoadNextSceneButtonClicked) {
-			//If arrow button is clicked, load next scene
+			//Load next scene if arrow button is clicked
 			currentScene = sceneManager->GetNextScene();
 			lightInformation = currentScene->m_LightInformation;
-			resourceManager = currentScene->m_ResourceManager;
 			skybox = currentScene->m_Skybox;
-			light = resourceManager->GetEntities()["Light"];
+			light = resourceManager->GetEntityByName("Light");
+			Entity* ground = resourceManager->GetEntityByName("Ground");
+			ground->SetNewTexture(currentScene->m_GroundTexture);
 
 			gui.InitializeSceneGUI(currentScene);
 			gui.LoadNextSceneButtonClicked = false;
 		}
 
+		//Draw Skybox
 		skybox->Bind(projectionMatrix, viewMatrix);
 		renderer->Draw(skyboxIndices.size());
 		glDepthFunc(GL_LESS);
 
+		//Render each entity in the world
 		for(const auto& entity : resourceManager->GetEntities()){
-			//Render each entity in the world
 			Entity* entityP = entity.second;
 			entityP->Bind();
 			if (entityP->GetName().find("Light") == std::string::npos) {
@@ -105,7 +111,7 @@ int main() {
 
 			renderer->Draw(entityP->GetMesh()->GetVertexIndexCount());
 		}
-
+	
 		gui.OnGUIUpdate();
 		displayManager->UpdateDisplay();
 	}

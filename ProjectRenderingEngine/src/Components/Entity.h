@@ -42,4 +42,6 @@ public:
 	inline Material* GetMaterial() const { return m_Material; }
 	inline Texture* GetTextureMap() const { return m_TextureMap; }
 	inline Texture* GetNormalMap() const { return m_NormalMap; }
+
+	inline void SetNewTexture(Texture* newTexture) { m_TextureMap = newTexture; }
 };

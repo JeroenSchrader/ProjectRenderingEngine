@@ -26,6 +26,7 @@ public:
 		}
 		return *m_SceneIterator;
 	}
+	inline std::vector<Scene*> GetAllScenes() { return m_Scenes; }
 
 private:
 	static SceneManager* m_Instance;
@@ -33,9 +34,6 @@ private:
 
 	std::vector<Scene*> m_Scenes;
 	std::vector<Scene*>::iterator m_SceneIterator;
-
-	std::string m_CurrentShader;
-	const std::string m_MirrorShader = "MirrorShader.glsl";
 
 	void LoadIceScene();
 	void LoadOceanScene();

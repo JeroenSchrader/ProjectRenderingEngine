@@ -7,8 +7,8 @@
 const std::vector<std::string> faces = {
 	"right.jpg",
 	"left.jpg",
-	"bottom.jpg",
 	"top.jpg",
+	"bottom.jpg",
 	"front.jpg",
 	"back.jpg"
 };

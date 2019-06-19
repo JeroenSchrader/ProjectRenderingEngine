@@ -64,7 +64,7 @@ void main() {
 	vec3 I = normalize(fs_in.fragmentPosition - u_cameraPosition);
 	vec3 R = reflect(I, normalize(fs_in.normal));
 	//Get texture from Skybox cubemap
-	vec4 texColor = vec4(texture(u_Skybox, -R).rgb, 1.0);
+	vec4 texColor = vec4(texture(u_Skybox, R).rgb, 1.0);
 
 	vec3 norm = normalize(fs_in.normal);
 	

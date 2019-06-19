@@ -15,10 +15,10 @@ Skybox::Skybox(Cubemap* cubemap, Shader* shader, OpenGLMesh* mesh)
 
 void Skybox::Bind(glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
 {
-	glDepthFunc(GL_LEQUAL);
 	m_Shader->Bind();
 	m_Shader->SetUniformMatrix4f("u_projectionMatrix", projectionMatrix);
 	m_Shader->SetUniformMatrix4f("u_viewMatrix", viewMatrix);
 	m_Mesh->GetVao()->Bind();
 	m_CubeMap->Bind();
+	glDepthFunc(GL_LEQUAL);
 }

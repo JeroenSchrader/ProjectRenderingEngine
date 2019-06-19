@@ -131,3 +131,13 @@ Skybox* ResourceManager::LoadSkybox(std::string name, std::string filePath)
 	return skybox;
 }
 
+Texture* ResourceManager::LoadTextureMap(std::string name, std::string filePath)
+{
+	Texture* textureMap = new Texture();
+	m_TextureMaps[name] = textureMap;
+
+	textureMap->LoadNewTexture(filePath, TextureTypes::TextureMap);
+
+	return textureMap;
+}
+

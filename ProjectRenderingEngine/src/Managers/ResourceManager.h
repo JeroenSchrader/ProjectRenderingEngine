@@ -15,6 +15,9 @@ class Skybox;
 
 class ResourceManager {
 private:
+	static ResourceManager* m_Instance;
+	ResourceManager() = default;
+
 	std::map<std::string, OpenGLMesh*> m_Meshes;
 	std::map<std::string, Entity*> m_Entities;
 	std::map<std::string, Shader*> m_Shaders;
@@ -24,13 +27,21 @@ private:
 	std::map<std::string, Cubemap*> m_Cubemaps;
 	std::map<std::string, Skybox*> m_Skyboxes;
 public:
-	ResourceManager() = default;
+	static ResourceManager* GetInstance() {
+		if (m_Instance) {
+			return m_Instance;
+		}
+		m_Instance = new ResourceManager();
+		return m_Instance;
+	}
+
 	~ResourceManager() = default;
 
 	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float shininess);
 	Material* LoadMaterial(std::string name, const std::string& shaderPath, glm::vec3 color, float shininess);
 	Entity* LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	Skybox* LoadSkybox(std::string name, std::string filePath);
+	Texture* LoadTextureMap(std::string name, std::string filePath);
 
 	inline std::map<std::string, OpenGLMesh*> GetMeshes() const { return m_Meshes; }
 	inline std::map<std::string, Entity*> GetEntities() const { return m_Entities; }

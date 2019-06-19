@@ -34,7 +34,7 @@ void GUI::InitializeSceneGUI(Scene* scene)
 	AddFloat3("Specular Light Color", &lightInformation->SpecularColor.x, 0, MaxRGBColorRange);
 	AddFloat1("Specular Light Strength", &lightInformation->SpecularStrength, 0, MaxRGBColorRange);
 
-	ResourceManager* resourceManager = scene->m_ResourceManager;
+	ResourceManager* resourceManager = ResourceManager::GetInstance();
 
 	std::map<std::string, Entity*> entities = resourceManager->GetEntities();
 	for (std::map<std::string, Entity*>::iterator it = entities.begin(); it != entities.end(); it++)

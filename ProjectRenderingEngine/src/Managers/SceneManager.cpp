@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include "ObjLoader.h"
 
-SceneManager::SceneManager() : m_CurrentShader("BasicShader.glsl")
+SceneManager::SceneManager()
 {
 	LoadIceScene();
 	LoadOceanScene();
@@ -13,14 +13,9 @@ SceneManager::SceneManager() : m_CurrentShader("BasicShader.glsl")
 void SceneManager::LoadIceScene()
 {
 	ObjLoader* loader = ObjLoader::GetInstance();
+	ResourceManager* resourceManager = ResourceManager::GetInstance();
 
 	Scene* scene = new Scene();
-
-	ResourceManager* resourceManager = new ResourceManager();
-	resourceManager->LoadModel("Mirror", "res/models/Mirror.obj", loader, "src/Shaders/" + m_MirrorShader, glm::vec3(15, 2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 3, 3));
-	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(-8, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/IceFloor.obj", loader, "src/Shaders/" + m_CurrentShader, glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	scene->m_ResourceManager = resourceManager;
 
 	LightingInformation* lightInformation = new LightingInformation();
 	lightInformation->AmbientColor = glm::vec3(0.2, 0.5, 0.8);
@@ -34,6 +29,9 @@ void SceneManager::LoadIceScene()
 	Skybox* skybox = resourceManager->LoadSkybox("Ice", "res/cubemaps/ice");
 	scene->m_Skybox = skybox;
 
+	Texture* groundTexture = resourceManager->LoadTextureMap("IceGroundTexture", "res/textures/ice.jpg");
+	scene->m_GroundTexture = groundTexture;
+
 	m_Scenes.push_back(scene);
 	m_SceneIterator = m_Scenes.begin();
 }
@@ -41,14 +39,9 @@ void SceneManager::LoadIceScene()
 void SceneManager::LoadOceanScene()
 {
 	ObjLoader* loader = ObjLoader::GetInstance();
+	ResourceManager* resourceManager = ResourceManager::GetInstance();
 
 	Scene* scene = new Scene();
-
-	ResourceManager* resourceManager = new ResourceManager();
-	resourceManager->LoadModel("Mirror", "res/models/Mirror.obj", loader, "src/Shaders/" + m_MirrorShader, glm::vec3(15, 4, 0), glm::vec3(0, 0, 0), glm::vec3(1, 3, 3));
-	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(12, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/GroundTexture.obj", loader, "src/Shaders/" + m_CurrentShader, glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	scene->m_ResourceManager = resourceManager;
 
 	LightingInformation* lightInformation = new LightingInformation();
 	lightInformation->AmbientColor = glm::vec3(1.0, 1.0, 1.0);
@@ -62,6 +55,9 @@ void SceneManager::LoadOceanScene()
 	Skybox* skybox = resourceManager->LoadSkybox("Ocean", "res/cubemaps/ocean");
 	scene->m_Skybox = skybox;
 
+	Texture* groundTexture = resourceManager->LoadTextureMap("OceanGroundTexture", "res/textures/GroundTexture.jpg");
+	scene->m_GroundTexture = groundTexture;
+
 	m_Scenes.push_back(scene);
 	m_SceneIterator = m_Scenes.begin();
 }
@@ -69,15 +65,9 @@ void SceneManager::LoadOceanScene()
 void SceneManager::LoadSunsetScene()
 {
 	ObjLoader* loader = ObjLoader::GetInstance();
+	ResourceManager* resourceManager = ResourceManager::GetInstance();
 
 	Scene* scene = new Scene();
-
-	ResourceManager* resourceManager = new ResourceManager();
-	resourceManager->LoadModel("Mirror", "res/models/Mirror.obj", loader, "src/Shaders/" + m_MirrorShader, glm::vec3(15, 4, 0), glm::vec3(0, 0, 0), glm::vec3(1, 3, 3));
-	resourceManager->LoadModel("Tree", "res/models/PineTree.obj", loader, "src/Shaders/" + m_MirrorShader, glm::vec3(15, -2, 15), glm::vec3(0, 0, 0), glm::vec3(4, 4, 4));
-	resourceManager->LoadModel("Light", "res/models/sphere.obj", loader, "src/Shaders/LightSourceShader.glsl", glm::vec3(12, 8, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	resourceManager->LoadModel("Ground", "res/models/BeachFloor.obj", loader, "src/Shaders/" + m_CurrentShader, glm::vec3(0, -2, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	scene->m_ResourceManager = resourceManager;
 
 	LightingInformation* lightInformation = new LightingInformation();
 	lightInformation->AmbientColor = glm::vec3(1.0, 0.3, 0.1);
@@ -90,6 +80,9 @@ void SceneManager::LoadSunsetScene()
 
 	Skybox* skybox = resourceManager->LoadSkybox("Sunset", "res/cubemaps/sunset");
 	scene->m_Skybox = skybox;
+
+	Texture* groundTexture = resourceManager->LoadTextureMap("SunsetGroundTexture", "res/textures/beach.jpg");
+	scene->m_GroundTexture = groundTexture;
 
 	m_Scenes.push_back(scene);
 	m_SceneIterator = m_Scenes.begin();
