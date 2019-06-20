@@ -17,7 +17,6 @@ void OnWindowResize(GLFWwindow* window, int width, int height)
 DisplayManager::DisplayManager(unsigned int width, unsigned int height, const char* title)	
 {
 	InitializeWindow(width, height, title);
-	glEnable(GL_DEPTH_TEST);
 }
 
 DisplayManager::~DisplayManager()
@@ -28,6 +27,7 @@ DisplayManager::~DisplayManager()
 
 void DisplayManager::Prepare() const
 {
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.3f, 0.4f, 0.8f, 1.0f);
 }

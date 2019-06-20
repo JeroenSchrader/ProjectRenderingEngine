@@ -50,4 +50,6 @@ public:
 
 	bool LoadModelButtonClicked;
 	bool LoadNextSceneButtonClicked;
+	bool GreyScaleEffectEnabled;
+	bool InverseColorEffectEnabled;
 };

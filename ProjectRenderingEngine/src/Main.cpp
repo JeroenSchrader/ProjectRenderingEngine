@@ -14,6 +14,7 @@
 #include "Entity.h"
 #include "Skybox.h"
 #include "Scene.h"
+#include "PostProcessing.h"
 
 //Initialize singletons
 DisplayManager* DisplayManager::m_Instance = 0;
@@ -47,12 +48,17 @@ int main() {
 	Skybox* skybox = currentScene->m_Skybox;
 	Entity* light = resourceManager->GetEntities()["Light"];
 
-	gui.InitializeSceneGUI(currentScene);
+	gui.InitializeSceneGUI(currentScene);	
+
+	PostProcessing* pp = resourceManager->CreatePostProcessingEffect("Effect1");
+	Effects effects(&gui.GreyScaleEffectEnabled, &gui.InverseColorEffectEnabled);
 
 	while (!inputManager->KeyPressed(GLFW_KEY_ESCAPE) && !displayManager->ShouldWindowClose())
 	{
 		inputManager->HandleInput();
 		camera->Update();
+		pp->InitializeFirstPass();
+		glViewport(0, 0, 1280, 720);
 		displayManager->Prepare();
 
 		glm::mat4 projectionMatrix = camera->GetProjectionMatrix();
@@ -111,6 +117,10 @@ int main() {
 
 			renderer->Draw(entityP->GetMesh()->GetVertexIndexCount());
 		}
+
+		glViewport(0, 0, displayManager->GetWindowWidth(), displayManager->GetWindowHeight());
+		pp->InitializeSecondPass(&effects);
+		renderer->Draw(quadIndices.size());
 	
 		gui.OnGUIUpdate();
 		displayManager->UpdateDisplay();

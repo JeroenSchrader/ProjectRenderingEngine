@@ -63,6 +63,8 @@ void GUI::OnGUIUpdate()
 	if (ImGui::ArrowButton("Arrow_Right", ImGuiDir_Right)) {
 		LoadNextSceneButtonClicked = true;
 	}
+	ImGui::Checkbox("GreyScale", &GreyScaleEffectEnabled);
+	ImGui::Checkbox("Inverse Color", &InverseColorEffectEnabled);
 
 	for (size_t i = 0; i < m_GUISliders.size(); i++)
 	{
@@ -87,7 +89,6 @@ void GUI::Cleanup()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext(m_Context);
-
 }
 
 void GUI::AddFloat1(std::string name, float* value, float minRange, float maxRange) {

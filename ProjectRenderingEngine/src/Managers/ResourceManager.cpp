@@ -4,6 +4,7 @@
 #include "VertexBufferLayout.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
+#include "FrameBuffer.h"
 
 #include "GLM/vec3.hpp"
 
@@ -17,6 +18,7 @@
 
 #include "Cubemap.h"
 #include "Skybox.h"
+#include "PostProcessing.h"
 
 #include <fstream>
 #include <iostream>
@@ -139,5 +141,31 @@ Texture* ResourceManager::LoadTextureMap(std::string name, std::string filePath)
 	textureMap->LoadNewTexture(filePath, TextureTypes::TextureMap);
 
 	return textureMap;
+}
+
+PostProcessing* ResourceManager::CreatePostProcessingEffect(std::string name)
+{
+	Shader* shader = new Shader("src/Shaders/Effects/QuadShader.glsl");
+	m_Shaders[name] = shader;
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);	//Positions,	location 0
+	layout.Push<float>(2);	//Textures,		location 1
+
+	OpenGLMesh* mesh = new OpenGLMesh();
+	m_Meshes[name] = mesh;
+
+	mesh->GetVertices() = quadVertices;
+	mesh->GetIndices() = quadIndices;
+	mesh->GetLayout() = layout;
+	mesh->CreateOpenGLData();
+
+	FrameBuffer* fbo = new FrameBuffer();
+	m_FrameBuffers[name] = fbo;
+
+	PostProcessing* effect = new PostProcessing(fbo, shader, mesh);
+	m_PostProcessingEffects[name] = effect;
+
+	return effect;
 }
 

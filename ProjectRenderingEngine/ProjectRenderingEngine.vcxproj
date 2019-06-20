@@ -142,12 +142,14 @@
   <ItemGroup>
     <ClCompile Include="src\Components\Camera.cpp" />
     <ClCompile Include="src\Effects\Cubemap.cpp" />
+    <ClCompile Include="src\Effects\PostProcessing.cpp" />
     <ClCompile Include="src\Effects\Skybox.cpp" />
     <ClCompile Include="src\Managers\DisplayManager.cpp" />
     <ClCompile Include="src\Components\Entity.cpp" />
     <ClCompile Include="src\Components\FileDialog.cpp" />
     <ClCompile Include="src\Components\GUI.cpp" />
     <ClCompile Include="src\Managers\SceneManager.cpp" />
+    <ClCompile Include="src\OpenGL_Core\FrameBuffer.cpp" />
     <ClCompile Include="src\OpenGL_Core\IndexBuffer.cpp" />
     <ClCompile Include="src\Managers\InputManager.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -171,12 +173,14 @@
     <ClInclude Include="src\Components\LightingInformation.h" />
     <ClInclude Include="src\Components\Scene.h" />
     <ClInclude Include="src\Effects\Cubemap.h" />
+    <ClInclude Include="src\Effects\PostProcessing.h" />
     <ClInclude Include="src\Effects\Skybox.h" />
     <ClInclude Include="src\Managers\DisplayManager.h" />
     <ClInclude Include="src\Components\Entity.h" />
     <ClInclude Include="src\Components\FileDialog.h" />
     <ClInclude Include="src\Components\GUI.h" />
     <ClInclude Include="src\Managers\SceneManager.h" />
+    <ClInclude Include="src\OpenGL_Core\FrameBuffer.h" />
     <ClInclude Include="src\OpenGL_Core\IndexBuffer.h" />
     <ClInclude Include="src\Managers\InputManager.h" />
     <ClInclude Include="src\Components\Material.h" />
@@ -201,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\BasicShader.glsl" />
+    <None Include="src\Shaders\Effects\QuadShader.glsl" />
     <None Include="src\Shaders\Effects\SkyboxShader.glsl" />
     <None Include="src\Shaders\LightSourceShader.glsl" />
     <None Include="src\Shaders\BasicShader_NormalMapping.glsl" />

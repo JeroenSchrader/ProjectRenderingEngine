@@ -90,6 +90,12 @@
     <ClCompile Include="src\Managers\SceneManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenGL_Core\FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Effects\PostProcessing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\imgui\imconfig.h">
@@ -185,6 +191,12 @@
     <ClInclude Include="src\Components\LightingInformation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenGL_Core\FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Effects\PostProcessing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\BasicShader.glsl" />
@@ -192,5 +204,6 @@
     <None Include="src\Shaders\BasicShader_NormalMapping.glsl" />
     <None Include="src\Shaders\Effects\SkyboxShader.glsl" />
     <None Include="src\Shaders\MirrorShader.glsl" />
+    <None Include="src\Shaders\Effects\QuadShader.glsl" />
   </ItemGroup>
 </Project>

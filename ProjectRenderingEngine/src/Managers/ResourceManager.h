@@ -12,6 +12,8 @@ class ObjLoader;
 class Texture;
 class Cubemap;
 class Skybox;
+class PostProcessing;
+class FrameBuffer;
 
 class ResourceManager {
 private:
@@ -26,6 +28,8 @@ private:
 	std::map<std::string, Texture*> m_NormalMaps;
 	std::map<std::string, Cubemap*> m_Cubemaps;
 	std::map<std::string, Skybox*> m_Skyboxes;
+	std::map<std::string, FrameBuffer*> m_FrameBuffers;
+	std::map<std::string, PostProcessing*> m_PostProcessingEffects;
 public:
 	static ResourceManager* GetInstance() {
 		if (m_Instance) {
@@ -42,6 +46,7 @@ public:
 	Entity* LoadModel(std::string name, std::string file, ObjLoader* loader, const std::string& shaderPath, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 	Skybox* LoadSkybox(std::string name, std::string filePath);
 	Texture* LoadTextureMap(std::string name, std::string filePath);
+	PostProcessing* CreatePostProcessingEffect(std::string name);
 
 	inline std::map<std::string, OpenGLMesh*> GetMeshes() const { return m_Meshes; }
 	inline std::map<std::string, Entity*> GetEntities() const { return m_Entities; }
@@ -51,6 +56,8 @@ public:
 	inline std::map<std::string, Texture*> GetNormalMaps() const { return m_NormalMaps; }
 	inline std::map<std::string, Cubemap*> GetCubemaps() const { return m_Cubemaps; }
 	inline std::map<std::string, Skybox*> GetSkyboxes() const { return m_Skyboxes; }
+	inline std::map<std::string, PostProcessing*> GetPostProcessingEffects() const { return m_PostProcessingEffects; }
+	inline std::map<std::string, FrameBuffer*> GetFrameBuffers() const { return m_FrameBuffers; }
 
 	inline OpenGLMesh* GetMeshByName(std::string name) { return m_Meshes[name]; }
 	inline Entity* GetEntityByName(std::string name) { return m_Entities[name]; }
